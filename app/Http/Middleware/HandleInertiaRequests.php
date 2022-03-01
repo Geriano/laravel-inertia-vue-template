@@ -44,9 +44,9 @@ class HandleInertiaRequests extends Middleware
 
             'flash' => fn () => session()->get('flash') ?: [],
 
-            'user' => fn () => User::with(['roles', 'permissions'])->find(auth()?->id()),
-            'permissions' => fn () => $request->user()?->permissions,
-            'roles' => fn () => $request->user()?->roles,
+            '$user' => fn () => User::with(['roles', 'permissions'])->find(auth()?->id()),
+            '$permissions' => fn () => $request->user()?->permissions,
+            '$roles' => fn () => $request->user()?->roles,
             'token' => function () use ($request) {
                 if ($user = $request->user()) {
                     $user->tokens()->delete();

@@ -67,8 +67,8 @@ Object.defineProperty(window, '$token', {
 Object.defineProperty(window, 'can', {
     value() {
         const abilities = Array.isArray(arguments[0]) ? arguments[0] : (arguments.length > 1 ? [...arguments] : arguments[0])
-        const roles = usePage().props.value.roles || []
-        const permissions = usePage().props.value.permission || []
+        const roles = usePage().props.value.$roles || []
+        const permissions = usePage().props.value.$permission || []
 
         if (Array.isArray(abilities)) {
             for (let ability of abilities) {
