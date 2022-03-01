@@ -126,6 +126,6 @@ createInertiaApp({
 window.usePage = usePage
 
 InertiaProgress.init({
-    delay: 500,
+    delay: 0,
     color: '#fff',
 })
