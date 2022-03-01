@@ -6,9 +6,9 @@
           {{ __('create') }}
         </Link>
 
-        <button @click.prevent="withTrashed = ! withTrashed" class="border border-slate-300 rounded-md px-3 py-1 uppercase shadow">
+        <Link :href="route('superuser.user.index', {with_trashed: withTrashed})" class="border border-slate-300 rounded-md px-3 py-1 uppercase shadow">
           {{ __((withTrashed ? 'without' : 'with') + ' trashed') }}
-        </button>
+        </Link>
       </div>
       <div class="flex items-center space-x-2 w-full sm:w-2/3">
         <div class="flex-none flex items-center space-x-4">

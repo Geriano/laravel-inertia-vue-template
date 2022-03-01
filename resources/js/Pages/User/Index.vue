@@ -16,11 +16,11 @@
 
           <div class="overflow-auto flex-wrap w-full p-4">
             <template v-if="modal.type === 'roles'">
-              <button @click.prevent="" v-for="(role, i) in roles" :key="i" :class="user.roles.find(r => r.id === role.id) && 'bg-green-600'" class="px-3 py-1 m-1 border rounded-md shadow uppercase">{{ __(role.name) }}</button>
+              <button @click.prevent="toggleRole(role)" v-for="(role, i) in roles" :key="i" :class="user.roles.find(r => r.id === role.id) && 'bg-green-600'" class="px-3 py-1 m-1 border rounded-md shadow uppercase">{{ __(role.name) }}</button>
             </template>
 
             <template v-else-if="modal.type === 'permissions'">
-              <button @click.prevent="givePermissionTo(permission)" v-for="(permission, i) in permissions" :key="i" :class="(user.permissions.find(r => r.id === permission.id) && 'bg-green-600') || (user.roles.find(role => role.permissions.find(p => p.id === permission.id)) && 'bg-green-600')" class="px-3 py-1 m-1 border rounded-md shadow uppercase">{{ __(permission.name) }}</button>
+              <button @click.prevent="togglePermission(permission)" v-for="(permission, i) in permissions" :key="i" :class="(user.permissions.find(r => r.id === permission.id) && 'bg-green-600') || (user.roles.find(role => role.permissions.find(p => p.id === permission.id)) && 'bg-green-600')" class="px-3 py-1 m-1 border rounded-md shadow uppercase">{{ __(permission.name) }}</button>
             </template>
           </div>
         </div>
@@ -90,10 +90,40 @@ import axios from "axios";
         this.user = user
       },
 
-      givePermissionTo(permission) {
+      togglePermission(permission) {
         return axios.patch(route('api.v1.superuser.user.toggle-permission'), {
                       userId: this.user.id,
                       permissionId: permission.id,
+                    })
+                    .then(response => {
+                      if (response.status === 200) {
+                        pushFlashMessage(response.data)
+
+                        return axios.get(route('api.v1.superuser.user.find', this.user.id))
+                                    .then(response => {
+                                      if (response.status === 200) {
+                                        this.user = response.data
+                                      }
+                                    })
+                      } else {
+                        pushFlashMessage({
+                          type: 'error',
+                          text: response.data.message,
+                        })
+                      }
+                    })
+                    .catch(error => {
+                      pushFlashMessage({
+                        type: 'error',
+                        text: error.message,
+                      })
+                    })
+      },
+
+      toggleRole(role) {
+        return axios.patch(route('api.v1.superuser.user.toggle-role'), {
+                      userId: this.user.id,
+                      roleId: role.id,
                     })
                     .then(response => {
                       if (response.status === 200) {
