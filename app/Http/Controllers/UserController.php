@@ -37,12 +37,16 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $withTrashed = ! empty($request->with_trashed);
+        $model = User::withTrashed($withTrashed)->with(['roles', 'permissions']);
+
         return Inertia::render('User/Index')->with([
+            'withTrashed' => $withTrashed,
             'perPage' => $perPage = (int) $request->per_page ?: 10,
             'search' => $search = $request->search,
             'roles' => Role::orderBy('name', 'asc')->get(),
             'permissions' => Permission::orderBy('name', 'asc')->get(),
-            'users' => $search ? User::withTrashed()->with(['roles', 'permissions'])->where(function ($query) use ($search) {
+            'users' => $search ? $model->where(function ($query) use ($search) {
                 $search = "%$search%";
                 $query->where('name', 'like', $search)
                         ->orWhere('username', 'like', $search)
@@ -50,7 +54,7 @@ class UserController extends Controller
                         ->orWhere('email_verified_at', 'like', $search)
                         ->orWhere('created_at', 'like', $search)
                         ->orWhere('deleted_at', 'like', $search);
-            })->paginate($perPage) : User::withTrashed()->with(['roles', 'permissions'])->paginate($perPage),
+            })->paginate($perPage) : $model->paginate($perPage),
         ]);
     }
 
