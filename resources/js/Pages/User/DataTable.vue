@@ -6,7 +6,7 @@
           {{ __('create') }}
         </Link>
 
-        <Link :href="route('superuser.user.index', {with_trashed: withTrashed})" class="border border-slate-300 rounded-md px-3 py-1 uppercase shadow">
+        <Link :href="route('superuser.user.index', {with_trashed: ! withTrashed})" class="border border-slate-300 rounded-md px-3 py-1 uppercase shadow">
           {{ __((withTrashed ? 'without' : 'with') + ' trashed') }}
         </Link>
       </div>
@@ -41,7 +41,7 @@
         </thead>
 
         <tbody class="bg-inherit">
-          <tr v-for="(user, i) in users.data.filter(user => withTrashed ? true : user.deleted_at === null)" :key="i" class="bg-inherit hover:bg-slate-200 z-0">
+          <tr v-for="(user, i) in users.data" :key="i" class="bg-inherit hover:bg-slate-200 z-0">
             <td class="border p-2 text-center sticky left-0 bg-inherit">{{ i + 1 }}</td>
             <td class="border p-2 text-center">
               <img :src="user.profile_photo_url" :alt="user.username" class="w-14 h-14 object-center rounded-full border">
@@ -54,15 +54,15 @@
             <td class="border p-2">{{ user.deleted_at && new Date(user.deleted_at).toLocaleString('id') }}</td>
             <td class="border border-r-0 p-2">
               <div class="text-xs px-2 flex flex-wrap items-center">
-                <Link :href="route('superuser.user.edit', user.id)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-blue-600 border border-blue-600 rounded-md uppercase">
+                <Link v-if="user.deleted_at === null" :href="route('superuser.user.edit', user.id)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-blue-600 border border-blue-600 rounded-md uppercase">
                   <Icon src="pen" class="w-3 h-3" /> <span>{{ __('edit') }}</span>
                 </Link>
                 
-                <button @click.prevent="$emit('show-modal', 'permissions', user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-slate-600 border border-slate-600 rounded-md uppercase">
+                <button v-if="user.deleted_at === null" @click.prevent="$emit('show-modal', 'permissions', user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-slate-600 border border-slate-600 rounded-md uppercase">
                   <Icon src="user-cog" class="w-3 h-3" /> <span>{{ __('permissions') }}</span>
                 </button>
                 
-                <button @click.prevent="$emit('show-modal', 'roles', user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-pink-500 border border-pink-500 rounded-md uppercase">
+                <button v-if="user.deleted_at === null" @click.prevent="$emit('show-modal', 'roles', user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-pink-500 border border-pink-500 rounded-md uppercase">
                   <Icon src="user-shield" class="w-3 h-3" /> <span>{{ __('roles') }}</span>
                 </button>
                 
@@ -157,7 +157,7 @@
       destroy(user) {
         return Swal.fire({
           icon: 'question',
-          html: `<span class="first-letter:capitalize lowercase">${__(user.deleted_at ? 'Are you want to delete permanently?' : 'Are you sure want to delete?')}</span>`,
+          html: `<span class="first-letter:capitalize lowercase">${__(user.deleted_at ? 'are you want to delete permanently' : 'are you sure want to delete')}?</span>`,
           showCancelButton: true,
         }).then(response => {
           if (response.isConfirmed) {
@@ -173,7 +173,7 @@
       reset(user) {
         return Swal.fire({
           icon: 'question',
-          html: `<span class="first-letter:capitalize lowercase">${ __('are you sure?') }</span>`,
+          html: `<span class="first-letter:capitalize lowercase">${ __('are you sure') }?</span>`,
           showCancelButton: true,
         }).then(response => {
           if (response.isConfirmed) {
@@ -198,6 +198,8 @@
 
     mounted() {
       this.$refs.search?.focus()
+
+      console.log(this.withTrashed)
     },
   })
 </script>
