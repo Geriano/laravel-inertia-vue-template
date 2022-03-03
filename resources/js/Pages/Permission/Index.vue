@@ -41,6 +41,7 @@
 <script>
   import { defineComponent } from "vue";
   import { Link, useForm } from '@inertiajs/inertia-vue3'
+  import { Inertia } from "@inertiajs/inertia";
   import DashboardLayout from '@/Layouts/DashboardLayout'
   import Icon from '@/Components/Icon'
   import Swal from "sweetalert2";
@@ -85,9 +86,7 @@
           showCancelButton: true,
         }).then(response => {
           if (response.isConfirmed) {
-            return this.$inertia.delete(route('superuser.permission.destroy', permission.id), {
-              onFinish: () => showFlashMessage(),
-            })
+            return Inertia.delete(route('superuser.permission.destroy', permission.id))
           }
         })
       },
