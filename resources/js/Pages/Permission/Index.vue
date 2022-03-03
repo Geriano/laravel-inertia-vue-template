@@ -73,7 +73,6 @@
       submit() {
         this.form.post(route('superuser.permission.store'), {
           onSuccess: () => {
-            this.showFlashMessage()
             this.form.reset()
           },
         })
