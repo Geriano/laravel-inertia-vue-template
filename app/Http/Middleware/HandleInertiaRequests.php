@@ -47,13 +47,13 @@ class HandleInertiaRequests extends Middleware
             '$user' => fn () => User::with(['roles', 'permissions'])->find(auth()?->id()),
             '$permissions' => fn () => $request->user()?->permissions,
             '$roles' => fn () => $request->user()?->roles,
-            'token' => function () use ($request) {
-                if ($user = $request->user()) {
-                    $user->tokens()->delete();
+            // 'token' => function () use ($request) {
+            //     if ($user = $request->user()) {
+            //         $user->tokens()->delete();
 
-                    return $user->createToken(uniqid())->plainTextToken;
-                }
-            },
+            //         return $user->createToken(uniqid())->plainTextToken;
+            //     }
+            // },
             '$translations' => function () {
                 $path = resource_path('lang/' . app()->getLocale() . '.json');
 
