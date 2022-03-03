@@ -66,4 +66,11 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+     * @var string[]
+     */
+    protected $with = [
+        'permissions', 'roles',
+    ];
 }
