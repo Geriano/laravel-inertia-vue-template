@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Route;
 
 Route::resource('user', App\Http\Controllers\UserController::class)->except(['show']);
-Route::patch('/user/{id}/restore', [App\Http\Controllers\UserController::class, 'restore'])->name('user.restore');
-Route::patch('/user/{id}/reset-password', [App\Http\Controllers\UserController::class, 'reset'])->name('user.reset-password');
+Route::prefix('user')->name('user.')->controller(App\Http\Controllers\UserController::class)->group(function () {
+  Route::get('/{user}/profile', 'profile')->name('profile');
+  Route::patch('/{user}/recovery', 'recovery')->name('recovery')->withTrashed();
+  Route::patch('/{user}/reset-password', 'reset')->name('reset-password');
+  Route::patch('/{user}/toggle-permission/{permission}', 'togglePermission')->name('toggle-permission');
+  Route::patch('/{user}/toggle-role/{role}', 'toggleRole')->name('toggle-role');
+});
+
 Route::resource('permission', App\Http\Controllers\PermissionController::class)->only(['index', 'store', 'destroy']);

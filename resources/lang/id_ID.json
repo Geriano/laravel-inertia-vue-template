@@ -24,7 +24,7 @@
   "from"                                                      : "dari",
   "record"                                                    : "catatan",
   "back"                                                      : "kembali",
-  "restore"                                                   : "pulihkan",
+  "recovery"                                                  : "pulihkan",
   "reset password"                                            : "buat kembali password",
   "are you sure"                                              : "apakah anda yakin",
   "are you sure want to delete"                               : "apakah anda yakin akan menghapus ini",
@@ -34,10 +34,12 @@
   "permission"                                                : "izin",
   "permissions"                                               : "izin",
   "builtin"                                                   : "bawaan",
+  "profile"                                                   : "profil",
 
   "user has been created with default password \":password\"" : "perngguna telah berhasil dibuat dengan sandi bawaan \":password\"",
   "user has been updated"                                     : "pengguna berhasil diperbaharui",
   "user has been deleted"                                     : "pengguna berhasil dihapus",
+  "role \":role\" is have permission to \":permission\", can't remove permission": "peran \":role\" sudah memiliki izin untuk \":permission\", tidak dapat menghapus izin",
 
   "create new permission"                                     : "buat izin baru",
   "permission name"                                           : "nama izin",

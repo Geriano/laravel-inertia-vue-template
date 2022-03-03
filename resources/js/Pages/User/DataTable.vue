@@ -54,28 +54,24 @@
             <td class="border p-2">{{ user.deleted_at && new Date(user.deleted_at).toLocaleString('id') }}</td>
             <td class="border border-r-0 p-2">
               <div class="text-xs px-2 flex flex-wrap items-center">
-                <Link v-if="user.deleted_at === null" :href="route('superuser.user.edit', user.id)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-blue-600 border border-blue-600 rounded-md uppercase">
-                  <Icon src="pen" class="w-3 h-3" /> <span>{{ __('edit') }}</span>
+                <Link v-if="user.deleted_at === null" :href="route('superuser.user.profile', user.id)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold bg-slate-50 border border-slate-300 rounded-md uppercase shadow">
+                  <Icon src="user" class="w-3 h-3" r="51" g="65" b="85" /> <span class="m-1">{{ __('profile') }}</span>
+                </Link>
+
+                <Link v-if="user.deleted_at === null" :href="route('superuser.user.edit', user.id)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold text-slate-100 bg-blue-600 border border-blue-600 rounded-md uppercase shadow">
+                  <Icon src="pen" class="w-3 h-3" /> <span class="m-1">{{ __('edit') }}</span>
                 </Link>
                 
-                <button v-if="user.deleted_at === null" @click.prevent="$emit('show-modal', 'permissions', user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-slate-600 border border-slate-600 rounded-md uppercase">
-                  <Icon src="user-cog" class="w-3 h-3" /> <span>{{ __('permissions') }}</span>
-                </button>
-                
-                <button v-if="user.deleted_at === null" @click.prevent="$emit('show-modal', 'roles', user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-pink-500 border border-pink-500 rounded-md uppercase">
-                  <Icon src="user-shield" class="w-3 h-3" /> <span>{{ __('roles') }}</span>
-                </button>
-                
-                <button v-if="user.deleted_at === null" @click.prevent="reset(user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-orange-500 border border-orange-500 rounded-md uppercase">
-                  <Icon src="spinner" class="w-3 h-3" /> <span>{{ __('reset password') }}</span>
+                <button v-if="user.deleted_at === null" @click.prevent="reset(user)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold text-slate-100 bg-orange-500 border border-orange-500 rounded-md uppercase shadow">
+                  <Icon src="spinner" class="w-3 h-3" /> <span class="m-1">{{ __('reset password') }}</span>
                 </button>
 
-                <button v-if="user.deleted_at" @click.prevent="restore(user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-blue-600 border border-blue-600 rounded-md uppercase">
-                  <Icon src="spinner" class="w-3 h-3" /> <span>{{ __('restore') }}</span>
+                <button v-if="user.deleted_at" @click.prevent="recovery(user)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold text-slate-100 bg-blue-600 border border-blue-600 rounded-md uppercase shadow">
+                  <Icon src="spinner" class="w-3 h-3" /> <span class="m-1">{{ __('recovery') }}</span>
                 </button>
 
-                <button @click.prevent="destroy(user)" class="m-1 flex flex-wrap items-center justify-center space-x-1 w-auto px-3 py-1 font-semibold text-slate-100 bg-red-600 border border-red-600 rounded-md uppercase">
-                  <Icon src="trash" class="w-3 h-3" /> <span>{{ __('delete') }}</span>
+                <button @click.prevent="destroy(user)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold text-slate-100 bg-red-600 border border-red-600 rounded-md uppercase shadow">
+                  <Icon src="trash" class="w-3 h-3" /> <span class="m-1">{{ __('delete') }}</span>
                 </button>
               </div>
             </td>
@@ -99,7 +95,7 @@
 <script>
   import { defineComponent } from 'vue'
   import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
-  import axios from 'axios'
+  import { Inertia } from '@inertiajs/inertia'
   import Swal from 'sweetalert2'
   import Icon from '@/Components/Icon'
 
@@ -127,7 +123,7 @@
         const search = this.$refs.search?.value.trim()
         const with_trashed = this.withTrashed
         
-        this.$inertia.get(route('superuser.user.index', {per_page, search, with_trashed}))
+        Inertia.get(route('superuser.user.index', {per_page, search, with_trashed}))
       },
 
       url(base) {
@@ -161,45 +157,22 @@
           showCancelButton: true,
         }).then(response => {
           if (response.isConfirmed) {
-            this.$inertia.delete(route('superuser.user.destroy', user.id) + (user.deleted_at ? '?force=1' : ''), {
-              onSuccess: () => {
-                this.showFlashMessage()
-              }
-            })
+            Inertia.delete(route('superuser.user.destroy', user.id) + (user.deleted_at ? '?force=1' : ''))
           }
         })
       },
 
       reset(user) {
-        return Swal.fire({
-          icon: 'question',
-          html: `<span class="first-letter:capitalize lowercase">${ __('are you sure') }?</span>`,
-          showCancelButton: true,
-        }).then(response => {
-          if (response.isConfirmed) {
-            return axios.patch(route('api.v1.superuser.user.reset-password', user.id))
-                        .then(response => {
-                          if (response.status === 200) {
-                            const flash = response.data
-                            
-                            pushFlashMessage({...flash, timer: null})
-                          }
-                        })
-          }
-        })
+        return Inertia.patch(route('superuser.user.reset-password', user.id))
       },
 
-      restore(user) {
-        return useForm({id: user.id}).patch(route('superuser.user.restore', user.id), {
-          onSuccess: () => showFlashMessage(),
-        })
+      recovery(user) {
+        return Inertia.patch(route('superuser.user.recovery', user.id))
       },
     },
 
     mounted() {
       this.$refs.search?.focus()
-
-      console.log(this.withTrashed)
     },
   })
 </script>

@@ -44,8 +44,6 @@ class UserController extends Controller
             'withTrashed' => $withTrashed,
             'perPage' => $perPage = (int) $request->per_page ?: 10,
             'search' => $search = $request->search,
-            'roles' => Role::orderBy('name', 'asc')->get(),
-            'permissions' => Permission::orderBy('name', 'asc')->get(),
             'users' => $search ? $model->where(function ($query) use ($search) {
                 $search = "%$search%";
                 $query->where('name', 'like', $search)
@@ -131,7 +129,7 @@ class UserController extends Controller
         ];
 
         if ($success) {
-            flash()->success(__('user has been updated'));
+            flash(timer: 1000)->success(__('user has been updated'));
 
             Log::info('updating user', $context);
         } else {
@@ -160,7 +158,7 @@ class UserController extends Controller
         ];
 
         if ($request->force ? $user->forceDelete() : $user->delete()) {
-            flash()->success(__('user has been deleted'));
+            flash(timer: 1000)->success(__('user has been deleted'));
 
             Log::info('deleting user', $context);
         } else {
@@ -173,66 +171,46 @@ class UserController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function reset(Request $request, int $id)
+    public function reset(User $user)
     {
-        $user = User::findOrFail($id);
         $context = [
             'id' => $user->id,
-            'password' => $password = Str::random(8),
+            'password' => $password = mb_strtolower(Str::random(8)),
         ];
 
         if ($user->update([ 'password' => Hash::make($password) ])) {
-            flash(timer: null)->success(__('password successfully replaced with ":password"', [
+            flash(timer: null)->success(__('user @:username password successfully replaced with ":password"', [
+                'username' => $user->username,
                 'password' => $password,
             ]));
 
             Log::info('updating password', $context);
-
-            if ($request->ajax()) {
-                return response()->json([
-                    'type' => 'success',
-                    'timer' => 5000,
-                    'text' => __('password successfully replaced with ":password"', [
-                        'password' => $password,
-                    ]),
-                ]);
-            }
         } else {
             flash()->error(__("can't update password"));
 
             Log::error('updating password', $context);
-
-            if ($request->ajax()) {
-                return response()->json([
-                    'type' => 'error',
-                    'timer' => null,
-                    'text' => __("can't update password"),
-                ]);
-            }
         }
 
         return redirect()->back();
     }
 
     /**
-     * @param int $id
+     * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function restore(int $id)
+    public function recovery(User $user)
     {
-        $user = User::withTrashed()->findOrFail($id);
         $user->deleted_at = null;
 
         $context = [
-            'id' => $id,
+            'id' => $user->id,
         ];
 
         if ($user->save()) {
-            flash()->success(__('user has been restored'));
+            flash(timer: 1000)->success(__('user has been restored'));
 
             Log::info('restoring user', $context);
         } else {
@@ -245,106 +223,80 @@ class UserController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function togglePermission(Request $request)
+    public function profile(User $user)
     {
-        $request->validate([
-            'userId' => 'required|integer|exists:users,id',
-            'permissionId' => 'required|integer|exists:permissions,id',
+        return Inertia::render('User/Profile')->with([
+            'user' => $user,
+            'permissions' => Permission::orderBy('name', 'asc')->get(),
+            'roles' => Role::orderBy('name', 'asc')->get(),
         ]);
+    }
 
-        $user = User::findOrFail($request->userId);
-        $permission = Permission::findOrFail($request->permissionId);
-
+    /**
+     * @param \App\Models\User $user
+     * @param \App\Models\Permission $permission
+     * @return \Illuminate\Http\Response
+     */
+    public function togglePermission(User $user, Permission $permission)
+    {
         $context = [
             'id' => $user->id,
             'permission' => $permission->name,
         ];
 
-        if ($user->hasPermissionTo($permission->name)) {
-            if ($user->revokePermissionTo($permission)) {
-                $success = true;
-            } else {
-                $success = false;
-            }
-        } else {
-            if ($user->givePermissionTo($permission)) {
-                $success = true;
-            } else {
-                $success = false;
+        foreach ($user->roles as $role) {
+            if ($role->hasPermissionTo($permission->name)) {
+                flash()->error(__('role ":role" is have permission to ":permission", can\'t remove permission', [
+                    'role' => __($role->name),
+                    'permission' => __($permission->name),
+                ]));
+
+                return redirect()->back();
             }
         }
+
+        $success = $user->hasPermissionTo($permission->name) ? ($user->revokePermissionTo($permission) ? true : false) : ($user->givePermissionTo($permission) ? true : false);
 
         if ($success) {
+            flash(timer: 1000)->success(__('permission has been updated'));
+
             Log::info('toggling permission', $context);
-
-            return [
-                'type' => 'success',
-                'text' => __('permission updated'),
-                'timer' => 5000,
-            ];
         } else {
-            Log::error('toggling permission', $context);
+            flash()->error(__("can't update permission"));
 
-            return [
-                'type' => 'error',
-                'text' => __('can\'t update permission'),
-                'timer' => null,
-            ];
+            Log::error('toggling permission', $context);
         }
+
+        return redirect()->back();
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User $user
+     * @param \App\Models\Role $role
      * @return \Illuminate\Http\Response
      */
-    public function toggleRole(Request $request)
+    public function toggleRole(User $user, Role $role)
     {
-        $request->validate([
-            'userId' => 'required|integer|exists:users,id',
-            'roleId' => 'required|integer|exists:roles,id',
-        ]);
-
-        $user = User::findOrFail($request->userId);
-        $role = Role::findOrFail($request->roleId);
-
         $context = [
             'id' => $user->id,
             'role' => $role->name,
         ];
 
-        if ($user->hasRole($role->name)) {
-            if ($user->removeRole($role)) {
-                $success = true;
-            } else {
-                $success = false;
-            }
-        } else {
-            if ($user->assignRole($role)) {
-                $success = true;
-            } else {
-                $success = false;
-            }
-        }
+        $success = $user->hasRole($role->name) ? ($user->removeRole($role) ? true : false) : ($user->assignRole($role) ? true : false);
 
         if ($success) {
+            flash(timer: 1000)->success(__('role has been updated'));
+
             Log::info('toggling role', $context);
-
-            return [
-                'type' => 'success',
-                'text' => __('role updated'),
-                'timer' => 5000,
-            ];
         } else {
-            Log::error('toggling role', $context);
+            flash()->error(__("can't update role"));
 
-            return [
-                'type' => 'error',
-                'text' => __('can\'t update role'),
-                'timer' => null,
-            ];
+            Log::error('toggling role', $context);
         }
+
+        return redirect()->back();
     }
 }
