@@ -1,11 +1,11 @@
 <template>
   <DashboardLayout title="Permissions">
-    <div class="flex space-x-2 w-full p-2">
-      <div class="flex-none w-1/4">
+    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full p-2">
+      <div class="flex-none w-full sm:w-1/4">
         <h1 class="first-letter:capitalize lowercase text-xl text-slate-800 font-semibold">{{ __('create new permission') }}</h1>
       </div>
 
-      <form @submit.prevent="submit" class="flex flex-col space-y-2 w-3/4 bg-slate-100 border rounded-md shadow-md">
+      <form @submit.prevent="submit" class="flex flex-col space-y-2 w-full sm:w-3/4 bg-slate-100 border rounded-md shadow-md">
         <div class="flex flex-col space-y-2 p-2">
           <label for="name" class="first-letter:capitalize lowercase">{{ __('permission name') }}</label>
 
@@ -22,12 +22,12 @@
       </form>
     </div>
 
-     <div class="flex space-x-2 w-full p-2">
-      <div class="flex-none w-1/4">
+     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full p-2">
+      <div class="flex-none w-full sm:w-1/4">
         <h1 class="first-letter:capitalize lowercase text-xl text-slate-800 font-semibold">{{ __('all permission') }}</h1>
       </div>
 
-      <div class="flex-wrap w-3/4 bg-slate-100 border rounded-md shadow-md p-4">
+      <div class="flex-wrap w-full sm:w-3/4 bg-slate-100 border rounded-md shadow-md p-4">
         <button v-for="(permission, i) in permissions" :key="i" class="border rounded-md shadow px-2 py-1 m-1 cursor-default">
           <div class="flex items-center w-full space-x-2">
             <span class="uppercase text-sm">{{ __(permission.name) }}</span> <Icon @click.prevent="destroy(permission)" src="times" r="51" g="65" b="85" class="hover:bg-red-600 hover:border-red-500 w-5 h-5 cursor-pointer border rounded-md shadow p-1 transition-all" />
