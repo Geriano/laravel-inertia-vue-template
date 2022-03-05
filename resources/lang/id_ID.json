@@ -48,5 +48,13 @@
   "can't create permission"                                   : "perizinan tidak berhasil dibuat",
   "permission has been deleted"                               : "perizinan berhasil dihapus",
   "can't delete permission"                                   : "perizinan tidak berhasil dihapus",
-  "are you sure wan't to delete permission"                   : "apakah anda yakin akan menghapus perizinan"
+  "are you sure wan't to delete permission"                   : "apakah anda yakin akan menghapus perizinan",
+
+  "create new role"                                           : "buat peran baru",
+  "all role"                                                  : "semua peran",
+  "role permissions"                                          : "perizinan peran",
+  "role name"                                                 : "nama peran",
+  "select permissions"                                        : "pilih izin",
+  "an error occurred while creating the role. error message \":message\"" : "peran tidak berhasil dibuat. pesan kesalahan \":message\"",
+  "role \":name\" has been deleted"                           : "peran \":name\" berhasil dihapus"
 }
