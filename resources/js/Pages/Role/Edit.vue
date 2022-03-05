@@ -1,0 +1,94 @@
+<template>
+  <DashboardLayout title="role">
+    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 p-2">
+      <div class="flex-none flex-wrap w-full sm:w-1/4">
+        <h3 class="text-xl font-semibold first-letter:capitalize lowercase">{{ __('create new role') }}</h3>
+      </div>
+
+      <form @submit.prevent="submit" class="w-full bg-slate-100 border border-slate-200 rounded-md shadow-xl">
+        <div class="flex flex-col space-y-2 p-4">
+          <label for="name" class="capitalize">{{ __('role name') }}</label>
+
+          <input v-model="form.name" type="text" name="name" :class="form.errors.name && 'border-red-500'" class="bg-slate-50 border rounded-md shadow-md w-full sm:w-2/3 py-1 placeholder:capitalize" :placeholder="__('role name')">
+        </div>
+
+        <div class="px-4 mb-2">
+          <Multiselect
+            v-model="form.permissions" 
+            :options="permissions.map(permission => ({
+              value: permission.id,
+              label: __(permission.name),
+            }))" 
+            :clearOnSearch="false"
+            :clearOnSelect="false"
+            :searchable="true"
+            :createTag="true"
+            mode="tags"
+            class="w-full sm:w-2/3 border rounded-md shadow py-1 uppercase placeholder:capitalize" 
+            :placeholder="__('select permissions')" />
+
+          <div v-if="form.errors.permissions" class="text-right text-xs text-slate-500">
+            {{ form.errors.permissions }}
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end w-full bg-slate-200 p-2 text-sm">
+          <button class="bg-slate-700 border border-slate-800 text-slate-200 rounded-md shadow px-3 py-1 uppercase">{{ __('create') }}</button>
+        </div>
+      </form>
+    </div>
+
+    <DataTable :roles="roles" />
+  </DashboardLayout>
+</template>
+
+<script>
+  import { defineComponent } from 'vue'
+  import { Inertia } from '@inertiajs/inertia'
+  import { Link, useForm } from '@inertiajs/inertia-vue3'
+  import Swal from 'sweetalert2'
+  import Multiselect from '@vueform/multiselect'
+  import DashboardLayout from '@/Layouts/DashboardLayout'
+  import Icon from '@/Components/Icon'
+  import DataTable from './DataTable'
+
+  export default defineComponent({
+    props: {
+      permissions: Array,
+      roles: Array,
+      role: Object,
+    },
+
+    components: {
+      DashboardLayout,
+      Multiselect,
+      Link,
+      Icon,
+      DataTable,
+    },
+
+    data() {
+      return {
+        form: useForm({
+          name: new String,
+          permissions: [],
+        }),
+      }
+    },
+    
+    methods: {
+      submit() {
+        this.form.patch(route('superuser.role.update', this.role.id), {
+          onSuccess: () => this.form.reset(),
+        })
+      },
+    },
+
+    mounted() {
+      this.form.name = this.role.name
+      this.form.permissions = this.role.permissions.map(permission => permission.id)
+    },
+  })
+</script>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
