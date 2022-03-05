@@ -85,9 +85,7 @@
 
     methods: {
       submit() {
-        this.form.post(route('superuser.user.store'), {
-          onSuccess: () => this.showFlashMessage(),
-        });
+        this.form.post(route('superuser.user.store'));
       },
     },
   });
