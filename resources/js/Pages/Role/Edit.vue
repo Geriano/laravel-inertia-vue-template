@@ -1,5 +1,5 @@
 <template>
-  <DashboardLayout title="role">
+  <DashboardLayout title="Role">
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 p-2">
       <div class="flex-none flex-wrap w-full sm:w-1/4">
         <h3 class="text-xl font-semibold first-letter:capitalize lowercase">{{ __('create new role') }}</h3>
