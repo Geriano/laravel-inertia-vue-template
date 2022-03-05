@@ -12,7 +12,7 @@
           <input v-model="form.name" type="text" name="name" :class="form.errors.name && 'border-red-500'" class="bg-slate-50 border rounded-md shadow-md w-full sm:w-2/3 py-1 placeholder:capitalize" :placeholder="__('role name')">
         </div>
 
-        <div class="px-4 mb-2">
+        <div class="w-full sm:w-2/3 pl-4 pr-1 mb-2">
           <Multiselect
             v-model="form.permissions" 
             :options="permissions.map(permission => ({
@@ -24,7 +24,7 @@
             :searchable="true"
             :createTag="true"
             mode="tags"
-            class="w-full sm:w-2/3 border rounded-md shadow py-1 uppercase placeholder:capitalize" 
+            class="uppercase placeholder:capitalize" 
             :placeholder="__('select permissions')" />
 
           <div v-if="form.errors.permissions" class="text-right text-xs text-slate-500">
