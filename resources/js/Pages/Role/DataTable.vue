@@ -23,7 +23,7 @@
               <template v-if="role.permissions.length">
                 <button v-for="(permission, j) in role.permissions" :key="j" class="px-2 py-1 text-xs text-slate-200 bg-slate-600 border border-slate-700 rounded-md m-1 uppercase cursor-default">
                   <div class="flex items-center space-x-2">
-                    <span>{{ __(permission.name) }}</span> <Icon @click.prevent="detach(role, permission)" src="times" class="w-3 h-3 border rounded cursor-pointer" />
+                    <span>{{ __(permission.name) }}</span> <Icon @click.prevent="detach(role, permission)" src="times" class="w-4 h-4 hover:bg-slate-800 rounded cursor-pointer" />
                   </div>
                 </button>
               </template>
