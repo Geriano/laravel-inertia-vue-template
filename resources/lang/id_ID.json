@@ -56,5 +56,8 @@
   "role name"                                                 : "nama peran",
   "select permissions"                                        : "pilih izin",
   "an error occurred while creating the role. error message \":message\"" : "peran tidak berhasil dibuat. pesan kesalahan \":message\"",
-  "role \":name\" has been deleted"                           : "peran \":name\" berhasil dihapus"
+  "role \":name\" has been deleted"                           : "peran \":name\" berhasil dihapus",
+  "are you sure want to detach permission"                    : "apakah anda yakin akan menghapus izin",
+  "permission \":name\" has been detached from role \":role\"": "izin \":name\" berhasil dihapus dari peran \":role\"",
+  "role \":name\" has been updated"                           : "peran \":name\" berhasil diperbaharui"
 }
