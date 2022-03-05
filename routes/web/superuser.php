@@ -12,3 +12,4 @@ Route::prefix('user')->name('user.')->controller(App\Http\Controllers\UserContro
 });
 
 Route::resource('permission', App\Http\Controllers\PermissionController::class)->only(['index', 'store', 'destroy']);
+Route::resource('role', App\Http\Controllers\RoleController::class);
