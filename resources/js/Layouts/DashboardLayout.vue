@@ -68,6 +68,12 @@
         </div>
         <!-- Main Content -->
 
+        <!-- Footer -->
+        <footer class="text-center w-full h-10 p-2 bg-cyan-500 first-letter:capitalize lowercase text-sm">
+          {{ __('powered by') }} <span class="capitalize font-bold">laravel</span> {{ __('and') }} <span class="capitalize font-bold">vue.js</span> {{ __('with') }} <span class="capitalize font-bold">inertia.js</span>
+        </footer>
+        <!-- Footer -->
+
         <!-- Flash Message -->
         <div class="flex flex-col space-y-2 absolute top-14 sm:top-10 right-0 sm:right-4 w-full sm:max-w-md max-h-96 overflow-auto px-2 sm:px-0 z-10">
           <transition-group name="slide-left">
