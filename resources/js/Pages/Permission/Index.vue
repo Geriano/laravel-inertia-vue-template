@@ -27,12 +27,18 @@
         <h1 class="first-letter:capitalize lowercase text-xl text-slate-800 font-semibold">{{ __('all permission') }}</h1>
       </div>
 
-      <div class="flex-wrap w-full sm:w-3/4 bg-slate-100 border rounded-md shadow-md p-4">
-        <button v-for="(permission, i) in permissions" :key="i" class="border rounded-md shadow px-2 py-1 m-1 cursor-default">
-          <div class="flex items-center w-full space-x-2">
-            <span class="uppercase text-sm">{{ __(permission.name) }}</span> <Icon @click.prevent="destroy(permission)" src="times" r="51" g="65" b="85" class="hover:bg-red-600 hover:border-red-500 w-5 h-5 cursor-pointer border rounded-md shadow p-1 transition-all" />
-          </div>
-        </button>
+      <div class="flex flex-col space-y-2 w-full sm:w-3/4 bg-slate-100 border rounded-md shadow-md">
+        <div class="flex items-center justify-end w-full bg-slate-200 px-4 py-2">
+          <input v-model="search" class="w-full sm:w-2/3 bg-slate-100 border border-slate-300 rounded-md px-3 py-1 text-sm placeholder:capitalize" :placeholder="__('search something')">
+        </div>
+
+        <div class="flex-wrap p-4">
+          <button v-for="(permission, i) in permissions.filter(permission => search.trim() ? permission.name.includes(search.trim()) : true)" :key="i" class="border rounded-md shadow px-2 py-1 m-1 cursor-default">
+            <div class="flex items-center w-full space-x-2">
+              <span class="uppercase text-sm">{{ __(permission.name) }}</span> <Icon @click.prevent="destroy(permission)" src="times" r="51" g="65" b="85" class="hover:bg-red-600 hover:border-red-500 w-5 h-5 cursor-pointer border rounded-md shadow p-1 transition-all" />
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   </DashboardLayout>
@@ -62,6 +68,7 @@
 
     data() {
       return {
+        search: new String,
         form: useForm({
           edit: false,
           name: new String,
