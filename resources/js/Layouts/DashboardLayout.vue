@@ -22,10 +22,11 @@
           <div class="flex flex-col w-full h-full overflow-y-auto">
             <NavLink :active="route().current('dashboard')" icon="tachometer-alt" :href="route('dashboard')" class="w-full">{{ __('dashboard') }}</NavLink>
 
-            <NavLinks v-if="usePage().props.value?.$user?.roles?.find(role => role.name === 'superuser')" icon="cogs" :title="__('builtin')" :open="route().current('superuser.user.*') || route().current('superuser.permission.*') || route().current('superuser.role.*')">
+            <NavLinks v-if="usePage().props.value?.$user?.roles?.find(role => role.name === 'superuser')" icon="cogs" :title="__('builtin')" :open="route().current('superuser.user.*') || route().current('superuser.permission.*') || route().current('superuser.role.*') || route().current('superuser.menu.*')">
               <NavLink icon="user" :href="route('superuser.user.index')" :active="route().current('superuser.user.*')" class="border-transparent border-slate-700 pl-4">{{ __('user') }}</NavLink>
               <NavLink icon="user-cog" :href="route('superuser.permission.index')" :active="route().current('superuser.permission.*')" class="border-transparent border-slate-700 pl-4">{{ __('permission') }}</NavLink>
               <NavLink icon="user-shield" :href="route('superuser.role.index')" :active="route().current('superuser.role.*')" class="border-transparent border-slate-700 pl-4">{{ __('role') }}</NavLink>
+              <NavLink icon="list" :href="route('superuser.menu.index')" :active="route().current('superuser.menu.*')" class="border-transparent border-slate-700 pl-4">{{ __('menu') }}</NavLink>
             </NavLinks>
           </div>
         </div>
