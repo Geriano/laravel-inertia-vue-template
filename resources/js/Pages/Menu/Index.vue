@@ -11,6 +11,10 @@
 
           <input v-model="form.name" type="text" name="name" class="w-full sm:w-2/3 bg-white text-sm border border-slate-300 rounded-md shadow placeholder:capitalize" :placeholder="__('menu name')" autofocus>
 
+          <transition name="fade">
+            <p v-if="form.errors.name" class="text-xs text-red-500">{{ form.errors.name }}</p>
+          </transition>
+
           <label for="route" class="first-letter:capitalize lowercase text-sm">{{ __('route') }} {{ __('or') }} {{ __('url') }}</label>
 
           <div class="w-full sm:w-2/3">
@@ -23,6 +27,10 @@
               :createTag="true"
               class="uppercase placeholder:capitalize" 
               :placeholder="__('choose route or write url')" />
+
+            <transition name="fade">
+              <p v-if="form.errors.route_or_url" class="text-xs text-red-500">{{ form.errors.route_or_url }}</p>
+            </transition>
 
             <ul class="flex-wrap text-xs text-slate-400 mt-2 list-disc list-inside">
               <li class="first-letter:capitalize lowercase">{{ __('choose a route name or write your own url if the route doesn\'t have a name / the route leads to an external link') }}</li>
@@ -42,6 +50,11 @@
               mode="tags"
               class="uppercase placeholder:capitalize" 
               :placeholder="__('select routes')" />
+
+
+            <transition name="fade">
+              <p v-if="form.errors.routes" class="text-xs text-red-500">{{ form.errors.routes }}</p>
+            </transition>
 
             <ul class="flex-wrap text-xs text-slate-400 mt-2 list-disc list-inside">
               <li class="first-letter:capitalize lowercase">{{ __('choose the route to bookmark the page is now part of the menu to be created') }}</li>
@@ -66,6 +79,10 @@
               class="uppercase placeholder:capitalize" 
               :placeholder="__('select permissions')" />
             
+            
+            <transition name="fade">
+              <p v-if="form.errors.permissions" class="text-xs text-red-500">{{ form.errors.permissions }}</p>
+            </transition>
             
             <ul class="flex-wrap text-xs text-slate-400 mt-2 list-disc list-inside">
               <li class="first-letter:capitalize lowercase">{{ __('if the user has the selected permission then the menu will appear') }}</li>
