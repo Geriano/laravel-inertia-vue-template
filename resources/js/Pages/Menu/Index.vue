@@ -23,6 +23,10 @@
               :createTag="true"
               class="uppercase placeholder:capitalize" 
               :placeholder="__('choose route or write url')" />
+
+            <ul class="flex-wrap text-xs text-slate-400 mt-2 list-disc list-inside">
+              <li class="first-letter:capitalize lowercase">{{ __('choose a route name or write your own url if the route doesn\'t have a name / the route leads to an external link') }}</li>
+            </ul>
           </div>
 
           <label for="routes" class="first-letter:capitalize lowercase text-sm">{{ __('active') }}</label>
@@ -38,6 +42,11 @@
               mode="tags"
               class="uppercase placeholder:capitalize" 
               :placeholder="__('select routes')" />
+
+            <ul class="flex-wrap text-xs text-slate-400 mt-2 list-disc list-inside">
+              <li class="first-letter:capitalize lowercase">{{ __('choose the route to bookmark the page is now part of the menu to be created') }}</li>
+              <li class="first-letter:capitalize lowercase">{{ __('will not work if the route is not registered in the app') }}</li>
+            </ul>
           </div>
 
           <label for="permissions" class="first-letter:capitalize lowercase text-sm">{{ __('permissions') }}</label>
@@ -56,6 +65,11 @@
               mode="tags"
               class="uppercase placeholder:capitalize" 
               :placeholder="__('select permissions')" />
+            
+            
+            <ul class="flex-wrap text-xs text-slate-400 mt-2 list-disc list-inside">
+              <li class="first-letter:capitalize lowercase">{{ __('if the user has the selected permission then the menu will appear') }}</li>
+            </ul>
           </div>
         </div>
 
