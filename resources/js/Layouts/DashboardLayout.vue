@@ -92,7 +92,7 @@
   </div>
 </template>
 
-<style scoped>
+<style>
   .slide-enter-active,
   .slide-leave-active {
     transition: all 0.5s ease;
