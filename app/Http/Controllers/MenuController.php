@@ -13,11 +13,9 @@ use SplFileInfo;
 class MenuController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function index()
+    public function __construct()
     {
         $icons = array_map(fn ($file) => (new SplFileInfo($file))->getFilename(), glob(
             sprintf('%s/*.svg', public_path('icons'))
@@ -26,15 +24,24 @@ class MenuController extends Controller
         $icons = array_map(fn ($file) => substr(
             $file, 0, -4
         ), $icons);
-
-        $routes = array_keys(Route::getRoutes()->getRoutesByName());
-
-        return Inertia::render('Menu/Index')->with([
+        
+        Inertia::share([
             'menus' => Menu::whereNull('parent_id')->with(['childs', 'permissions'])->orderBy('position', 'asc')->get(),
             'icons' => $icons,
-            'routes' => $routes,
+            'routes' => array_keys(Route::getRoutes()->getRoutesByName()),
             'permissions' => Permission::orderBy('name', 'asc')->get(),
         ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+
+        return Inertia::render('Menu/Index');
     }
 
     /**
