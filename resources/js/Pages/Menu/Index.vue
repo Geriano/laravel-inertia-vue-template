@@ -22,7 +22,7 @@
               :searchable="true"
               :createTag="true"
               class="uppercase placeholder:capitalize" 
-              :placeholder="__('select route or type url')" />
+              :placeholder="__('choose route or write url')" />
           </div>
 
           <label for="routes" class="first-letter:capitalize lowercase text-sm">{{ __('active') }}</label>

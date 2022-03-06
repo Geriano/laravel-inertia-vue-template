@@ -2,7 +2,7 @@
   <DashboardLayout title="Role">
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 p-2">
       <div class="flex-none flex-wrap w-full sm:w-1/4">
-        <h3 class="text-xl font-semibold first-letter:capitalize lowercase">{{ __('create new role') }}</h3>
+        <h3 class="text-xl font-semibold first-letter:capitalize lowercase">{{ __('edit role') }}</h3>
       </div>
 
       <form @submit.prevent="submit" class="w-full bg-slate-100 border border-slate-200 rounded-md shadow-xl">

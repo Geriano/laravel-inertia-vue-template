@@ -55,6 +55,7 @@
   "role permissions" : "perizinan peran",
   "role name" : "nama peran",
   "select permissions" : "pilih izin",
+  "edit role": "perbaharui peran",
   "an error occurred while creating the role. error message \" :message\"" : "peran tidak berhasil dibuat. pesan kesalahan \" :message\"",
   "role \" :name\" has been deleted" : "peran \" :name\" berhasil dihapus",
   "are you sure want to detach permission" : "apakah anda yakin akan menghapus izin",
@@ -68,5 +69,9 @@
   "menu \":name\" has been updated" : "menu \":name\" berhasil diperbaharui",
   "can't update menu": "tidak dapat memperbaharui menu",
   "menu \":name\" has been deleted" : "menu \":name\" berhasil dihapus",
-  "can't delete menu": "tidak dapat menghapus menu"
+  "can't delete menu": "tidak dapat menghapus menu",
+  "choose route or write url": "pilih rute atau tulis url",
+  "select routes": "pilih rute",
+  "menu name": "nama menu",
+  "create new menu": "buat menu baru"
 }
