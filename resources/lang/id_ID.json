@@ -73,5 +73,13 @@
   "choose route or write url": "pilih rute atau tulis url",
   "select routes": "pilih rute",
   "menu name": "nama menu",
-  "create new menu": "buat menu baru"
+  "create new menu": "buat menu baru",
+  "choose a route name or write your own url if the route doesn't have a name / the route leads to an external link": "pilih nama rute atau tulis url sendiri jika rute tidak memiliki nama / rute menuju ke link eksternal",
+  "choose the route to bookmark the page is now part of the menu to be created": "pilih rute untuk menandai halaman sekarang adalah bagian dari menu yang akan dibuat",
+  "will not work if the route is not registered in the app": "tidak akan berfungsi jika rute tidak terdaftar dalam aplikasi",
+  "if the user has the selected permission then the menu will appear": "jika pengguna memiliki izin yang dipilih maka menu akan ditampilkan",
+
+  "powered by": "dibangun oleh",
+  "and": "dan",
+  "with": "dengan"
 }
