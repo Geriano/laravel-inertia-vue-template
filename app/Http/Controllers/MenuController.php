@@ -114,6 +114,18 @@ class MenuController extends Controller
      */
     public function destroy(Menu $menu)
     {
-        //
+        if ($menu->delete()) {
+            flash()->success(__('menu ":name" has been deleted', [
+                'name' => $menu->name,
+            ]));
+
+            Log::info('delete menu', $menu->toArray());
+        } else {
+            flash()->error(__('can\'t delete menu'));
+
+            Log::error('delete menu', $menu->toArray());
+        }
+
+        return redirect()->route('superuser.menu.index');
     }
 }
