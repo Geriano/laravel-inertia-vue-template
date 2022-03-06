@@ -14,3 +14,5 @@ Route::prefix('user')->name('user.')->controller(App\Http\Controllers\UserContro
 Route::resource('permission', App\Http\Controllers\PermissionController::class)->only(['index', 'store', 'destroy']);
 Route::resource('role', App\Http\Controllers\RoleController::class)->except(['show']);
 Route::patch('/role/{role}/detach', [App\Http\Controllers\RoleController::class, 'detach'])->name('role.detach');
+
+Route::resource('menu', App\Http\Controllers\MenuController::class)->except(['create']);
