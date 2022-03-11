@@ -91,7 +91,7 @@
         </div>
 
         <div class="flex items-center justify-end bg-slate-200 px-4 py-2 space-x-2 text-xs">
-          <Link :href="route('superuser.menu.index')" class="bg-slate-200 border border-slate-300 rounded-md shadow px-3 py-2 uppercase font-bold">
+          <Link :href="route('superuser.menu.index')" class="bg-slate-50 border border-slate-300 rounded-md shadow px-3 py-2 uppercase font-bold">
             {{ __('back') }}
           </Link>
 
