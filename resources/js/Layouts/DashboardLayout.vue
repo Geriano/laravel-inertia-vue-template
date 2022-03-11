@@ -137,9 +137,12 @@
     }
   }
 
-  .fade-enter-active,
+  .fade-enter-active {
+    transition: all 750ms ease;
+  }
+
   .fade-leave-active {
-    transition: all 0.5s ease;
+    transition: all 300ms ease;
   }
 
   .fade-enter-from,
