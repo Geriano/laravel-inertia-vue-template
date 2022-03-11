@@ -1,14 +1,35 @@
 <template>
-  <div class="flex items-center bg-slate-200 border border-slate-300 rounded mb-1 p-2 uppercase">
-    <div class="flex-wrap w-full">{{ __(menu.name) }}</div>
+  <div
+    :draggable="true"
+    @dragstart="start($event, menu)"
+    @dragend="end"
+    @dragover.prevent
+    @dragenter.prevent
+    @dragleave.prevent
+    @drop="drop($event, menu)"
+    :class="drag && 'bg-slate-100'"
+    class="flex items-center bg-slate-200 border border-slate-300 rounded rounded-r-none border-r-0 p-2 uppercase">
+    <div class="flex-wrap w-full">{{ menu.position }}  - {{ __(menu.name) }}</div>
 
-    <div class="flex-none flex items-center space-x-2">
+    <div class="flex-none flex items-center space-x-1">
+      <Link v-if="menu.parent_id" :href="route('superuser.menu.remove-parent', menu.id)" method="patch" as="button" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
+        <Icon src="caret-left" r="51" g="65" b="85" class="w-full h-full" />
+      </Link>
+
+      <Link v-if="menu.position > 1" :href="route('superuser.menu.set-parent', menu.id)" method="patch" as="button" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
+        <Icon src="caret-right" r="51" g="65" b="85" class="w-full h-full" />
+      </Link>
+
+      <button v-if="minimize" @click.prevent="$emit('toggle')" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
+        <Icon :src="open ? 'minus' : 'plus'" r="51" g="65" b="85" class="w-full h-full" />
+      </button>
+
       <Link :href="route('superuser.menu.edit', menu.id)" class="bg-blue-600 text-slate-200 border border-blue-700 rounded shadow p-1 w-6 h-6">
-        <Icon src="pen" />
+        <Icon src="pen" class="w-full h-full" />
       </Link>
 
       <button @click.prevent="destroy(menu)" class="bg-red-600 text-slate-200 border border-red-700 rounded shadow p-1 w-6 h-6">
-        <Icon src="trash" />
+        <Icon src="trash" class="w-full h-full" />
       </button>
     </div>
   </div>
@@ -16,14 +37,23 @@
 
 <script>
   import { defineComponent } from 'vue'
-  import { Link } from '@inertiajs/inertia-vue3'
+  import { Link, useForm } from '@inertiajs/inertia-vue3'
   import { Inertia } from '@inertiajs/inertia'
   import Icon from '@/Components/Icon'
   import Swal from 'sweetalert2'
 
   export default defineComponent({
     props: {
+      menus: Array,
       menu: Object,
+      minimize: {
+        type: Boolean,
+        default: false,
+      },
+      open: {
+        type: Boolean,
+        default: true,
+      },
     },
 
     components: {
@@ -42,6 +72,27 @@
             return Inertia.delete(route('superuser.menu.destroy', menu.id))
           }
         })
+      },
+
+      start(e, menu) {
+        e.dataTransfer.setData('id', menu.id)
+      },
+
+      end(e) {
+        this.drag = {}
+      },
+
+      drop(e, menu) {
+        const drag = this.menus.find(menu => Number(menu.id) === Number(e.dataTransfer.getData('id')))
+
+        if (!drag) return;
+        if (drag.id === menu.id) return;
+        if (drag.parent_id !== menu.parent_id) return;
+        
+        return useForm({
+          left: drag.id,
+          right: menu.id,
+        }).patch(route('superuser.menu.swap'))
       },
     },
   })

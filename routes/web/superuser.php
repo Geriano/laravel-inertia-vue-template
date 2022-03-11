@@ -15,4 +15,9 @@ Route::resource('permission', App\Http\Controllers\PermissionController::class)-
 Route::resource('role', App\Http\Controllers\RoleController::class)->except(['show']);
 Route::patch('/role/{role}/detach', [App\Http\Controllers\RoleController::class, 'detach'])->name('role.detach');
 
+Route::prefix('/menu')->name('menu.')->controller(App\Http\Controllers\MenuController::class)->group(function () {
+  Route::patch('/swap', 'swap')->name('swap');
+  Route::patch('/{menu}/remove-parent', 'removeParent')->name('remove-parent');
+  Route::patch('/{menu}/set-parent', 'setParent')->name('set-parent');
+});
 Route::resource('menu', App\Http\Controllers\MenuController::class)->except(['create']);

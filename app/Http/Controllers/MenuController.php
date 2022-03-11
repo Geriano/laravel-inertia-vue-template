@@ -26,7 +26,7 @@ class MenuController extends Controller
         ), $icons);
         
         Inertia::share([
-            'menus' => Menu::whereNull('parent_id')->with(['childs', 'permissions'])->orderBy('position', 'asc')->get(),
+            'menus' => Menu::whereNull('parent_id')->with(['childs'])->orderBy('position', 'asc')->get(),
             'icons' => $icons,
             'routes' => array_keys(Route::getRoutes()->getRoutesByName()),
             'permissions' => Permission::orderBy('name', 'asc')->get(),
@@ -134,5 +134,102 @@ class MenuController extends Controller
         }
 
         return redirect()->route('superuser.menu.index');
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function swap(Request $request)
+    {
+        $request->validate([
+            'left' => 'required|integer|exists:menus,id',
+            'right' => 'required|integer|exists:menus,id',
+        ]);
+
+        $left = Menu::find($request->left);
+        $right = Menu::find($request->right);
+        
+        if ($left->position > $right->position) {
+            $left->update([
+                'position' => $right->position,
+            ]);
+
+            Menu::where('position', '>=', $left->position)
+                ->where('id', '!=', $left->id)
+                ->where('parent_id', $left->parent_id)
+                ->orderBy('position')
+                ->increment('position');
+        } else {
+            $left->update([
+                'position' => $right->position,
+            ]);
+
+            Menu::where('position', '<=', $left->position)
+                ->where('id', '!=', $left->id)
+                ->where('parent_id', $left->parent_id)
+                ->orderByDesc('position')
+                ->decrement('position');
+        }
+
+        Menu::where('parent_id', $left->parent_id)
+            ->orderBy('position')
+            ->get()
+            ->each(function ($menu) use (&$i) {
+                $menu->update([
+                    'position' => ++$i,
+                ]);
+            });
+
+        return redirect()->back();
+    }
+
+    /**
+     * @param \App\Models\Menu $menu
+     * @return \Illuminate\Http\Response
+     */
+    public function removeParent(Menu $menu)
+    {
+        $parent = $menu->parent;
+
+        $menu->update([
+            'parent_id' => $parent->parent_id,
+            'position' => $parent->position + 1,
+        ]);
+
+        Menu::where('parent_id', $parent->parent_id)
+            ->where('position', '>=', $menu->position)
+            ->where('id', '!=', $menu->id)
+            ->orderBy('position')
+            ->increment('position');
+
+        return redirect()->back();
+    }
+
+    /**
+     * @param \App\Models\Menu $menu
+     * @return \Illuminate\Http\Response
+     */
+    public function setParent(Menu $menu)
+    {
+        $sibling = Menu::where('parent_id', $menu->parent_id)
+                        ->where('position', '<', $menu->position)
+                        ->orderByDesc('position')
+                        ->withCount('childs')
+                        ->first();
+
+        if ($sibling) {
+            $menu->update([
+                'parent_id' => $sibling->id,
+                'position' => $sibling->childs_count + 1,
+            ]);
+
+            Menu::where('parent_id', $sibling->parent_id)
+                ->where('position', '>', $sibling->position)
+                ->orderBy('position')
+                ->decrement('position');
+        }
+
+        return redirect()->back();
     }
 }

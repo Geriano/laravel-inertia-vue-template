@@ -15,33 +15,33 @@ class MenuSeeder extends Seeder
     public function run()
     {
         $a = Menu::create([
-            'name' => 'a',
+            'name' => 'menu name a',
+            'position' => 1,
+        ]);
+
+        $a1 = $a->childs()->create([
+            'name' => 'menu name a1',
+            'position' => 1,
+        ]);
+
+        $a1a = $a1->childs()->create([
+            'name' => 'menu name a1a',
             'position' => 1,
         ]);
 
         $b = Menu::create([
-            'name' => 'b',
-            'position' => 2,
-        ]);
-
-        $b1 = $b->childs()->create([
-            'name' => 'b1',
-            'position' => 1,
-        ]);
-
-        $b1a = $b1->childs()->create([
-            'name' => 'b1a',
-            'position' => 1,
-        ]);
-
-        $b2 = $b->childs()->create([
-            'name' => 'b2',
+            'name' => 'menu name b',
             'position' => 2,
         ]);
 
         $c = Menu::create([
-            'name' => 'c',
+            'name' => 'menu name c',
             'position' => 3,
+        ]);
+
+        $d = Menu::create([
+            'name' => 'menu name d',
+            'position' => 4,
         ]);
     }
 }

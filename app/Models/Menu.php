@@ -38,7 +38,7 @@ class Menu extends Model
      */
     public function childs()
     {
-        return $this->hasMany(static::class, 'parent_id', 'id')->with('childs')->orderBy('position', 'asc');
+        return $this->hasMany(static::class, 'parent_id', 'id')->with(['childs', 'parent'])->orderBy('position', 'asc');
     }
 
     /**
@@ -46,7 +46,7 @@ class Menu extends Model
      */
     public function parent()
     {
-        return $this->hasOne(static::class, 'id', 'parent_id');
+        return $this->hasOne(static::class, 'id', 'parent_id')->withCount('childs');
     }
 
     /**
