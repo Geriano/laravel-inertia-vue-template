@@ -34,6 +34,13 @@ class Menu extends Model
     ];
 
     /**
+     * @var string[]
+     */
+    protected $with = [
+        'permissions',
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function childs()
