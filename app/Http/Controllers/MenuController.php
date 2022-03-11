@@ -55,7 +55,7 @@ class MenuController extends Controller
         $post = $request->validate([
             'name' => 'required|string',
             'icon' => 'nullable|string',
-            'route_or_url' => 'nullable|string',
+            'route_or_url' => 'required|string',
             'routes.*' => 'nullable|string',
             'permissions.*' => 'nullable|integer|exists:permissions,id',
         ]);
@@ -65,6 +65,8 @@ class MenuController extends Controller
         ]));
 
         if ($menu) {
+            $menu->permissions()->sync($post['permissions'] ?? []);
+            
             flash()->success(__('menu ":name" has been created', [
                 'name' => $menu->name,
             ]));
@@ -98,7 +100,9 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-        //
+        return Inertia::render('Menu/Edit', [
+            'menu' => $menu,
+        ]);
     }
 
     /**
@@ -110,7 +114,31 @@ class MenuController extends Controller
      */
     public function update(Request $request, Menu $menu)
     {
-        //
+        $updated = $menu->update(
+            $request->validate([
+                'name' => 'required|string',
+                'icon' => 'nullable|string',
+                'route_or_url' => 'required|string',
+                'routes.*' => 'nullable|string',
+                'permissions.*' => 'nullable|integer|exists:permissions,id',
+            ])
+        );
+
+        if ($updated) {
+            $menu->permissions()->sync($request->get('permissions', []));
+
+            flash()->success(__('menu ":name" has been updated', [
+                'name' => $menu->name,
+            ]));
+
+            Log::info('update menu', $request->all());
+        } else {
+            flash()->error(__('can\'t update menu'));
+
+            Log::error('update menu', $request->all());
+        }
+
+        return redirect()->to(route('superuser.menu.index'));
     }
 
     /**
