@@ -46,7 +46,7 @@
               :clearOnSearch="false"
               :clearOnSelect="false"
               :searchable="true"
-              :createTag="true"
+              :createTag="false"
               mode="tags"
               class="uppercase placeholder:capitalize" 
               :placeholder="__('select routes')" />
@@ -74,7 +74,7 @@
               :clearOnSearch="false"
               :clearOnSelect="false"
               :searchable="true"
-              :createTag="true"
+              :createTag="false"
               mode="tags"
               class="uppercase placeholder:capitalize" 
               :placeholder="__('select permissions')" />
@@ -90,7 +90,7 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-end bg-slate-200 px-4 py-2 text-xs">
+        <div class="flex items-center justify-end bg-slate-200 px-4 py-2 space-x-2 text-xs">
           <button class="bg-slate-700 text-slate-200 border border-slate-800 rounded-md shadow px-3 py-2 uppercase font-bold">
             {{ __('create') }}
           </button>
@@ -98,7 +98,9 @@
       </form>
     </div>
 
-    <DataTable :menus="menus" />
+    <transition name="fade">
+      <DataTable v-if="menus.length" :menus="menus" />
+    </transition>
   </DashboardLayout>
 </template>
 
