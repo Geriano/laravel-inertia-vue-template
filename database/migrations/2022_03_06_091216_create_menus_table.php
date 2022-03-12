@@ -21,14 +21,15 @@ class CreateMenusTable extends Migration
                   ->default(null);
             $table->string('route_or_url')->default('#');
             $table->string('icon')
-                  ->nullable()
-                  ->default(null);
+                  ->default('circle');
             $table->boolean('active')
                   ->default(true);
             $table->integer('position');
             $table->json('routes')
                   ->nullable()
                   ->default('[]');
+            $table->boolean('deleteable')
+                  ->default(true);
             $table->timestamps();
 
             $table->foreign('parent_id')

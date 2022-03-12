@@ -24,6 +24,7 @@ class Menu extends Model
         'active',
         'position',
         'routes',
+        'deleteable',
     ];
 
     /**

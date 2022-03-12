@@ -28,7 +28,7 @@
         <Icon src="pen" class="w-full h-full" />
       </Link>
 
-      <button @click.prevent="destroy(menu)" class="bg-red-600 text-slate-200 border border-red-700 rounded shadow p-1 w-6 h-6">
+      <button v-if="menu.deleteable" @click.prevent="destroy(menu)" class="bg-red-600 text-slate-200 border border-red-700 rounded shadow p-1 w-6 h-6">
         <Icon src="trash" class="w-full h-full" />
       </button>
     </div>
