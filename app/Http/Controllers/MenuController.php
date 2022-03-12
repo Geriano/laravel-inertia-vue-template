@@ -62,6 +62,7 @@ class MenuController extends Controller
 
         $menu = Menu::create(array_merge($post, [
             'position' => Menu::whereNull('parent_id')->count() + 1,
+            'icon' => $post['icon'] ?? 'circle',
         ]));
 
         if ($menu) {
