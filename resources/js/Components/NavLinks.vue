@@ -12,7 +12,7 @@
       </span>
     </button>
 
-    <transition-group name="slide">
+    <transition-group name="fade">
       <div v-if="showingDropdown" class="flex flex-col w-full h-auto">
         <slot />
       </div>
