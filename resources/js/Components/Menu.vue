@@ -19,7 +19,7 @@
               return h(NavLinks, {
                 ...attrs,
                 active,
-                title: menu.name,
+                title: __(menu.name),
                 icon: menu.icon,
               }, generate(childs, {
                 child: menu.parent_id !== null || menu.parent_id !== undefined,
@@ -32,7 +32,7 @@
                 href: menu.route_or_url.startsWith('http') ? menu.route_or_url : menu.route_or_url === '#' ? '#' : route(menu.route_or_url),
                 icon: menu.icon,
                 active,
-              }, menu.name)
+              }, __(menu.name))
             }
           })
         }
