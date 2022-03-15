@@ -35,7 +35,7 @@ class CreateMenusTable extends Migration
             $table->foreign('parent_id')
                   ->references('id')
                   ->on('menus')
-                  ->nullOnDelete();
+                  ->cascadeOnDelete();
         });
     }
 
