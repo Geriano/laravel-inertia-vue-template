@@ -14,18 +14,24 @@
             const childs = menu.childs
 
             if (childs.length) {
+              const active = menu.routes.find(name => route().current(name)) !== undefined || menu.childs.find(child => child.routes.find(name => route().current(name))) !== undefined
+
               return h(NavLinks, {
                 ...attrs,
-                child: false,
+                active,
                 title: menu.name,
                 icon: menu.icon,
-              }, generate(childs, {class: 'bg-slate-600 hover:bg-slate-700 pl-4'}))
+              }, generate(childs, {
+                child: menu.parent_id !== null || menu.parent_id !== undefined,
+              }))
             } else {
+              const active = menu.routes.find(name => route().current(name)) !== undefined
+
               return h(NavLink, {
                 ...attrs,
                 href: menu.route_or_url.startsWith('http') ? menu.route_or_url : menu.route_or_url === '#' ? '#' : route(menu.route_or_url),
                 icon: menu.icon,
-                active: false,
+                active,
               }, menu.name)
             }
           })

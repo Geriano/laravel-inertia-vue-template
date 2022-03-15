@@ -1,6 +1,6 @@
 <template>
   <div class="relative flex flex-col w-full h-auto" style="z-index: 2;">
-    <button @click.prevent="showingDropdown = ! showingDropdown" :class="(showingDropdown && 'bg-slate-700') + (child && ' pl-4')" class="flex-none flex items-center w-full min-h-[3rem] space-x-1 transition-all hover:bg-slate-700 hover:shadow-lg">
+    <button @click.prevent="showingDropdown = ! showingDropdown" :class="showingDropdown && 'border-r-8 border-slate-700'" class="flex-none flex items-center w-full min-h-[3rem] space-x-1 transition-all">
       <div class="flex-none w-12 h-12 p-2">
         <button class="w-full h-full p-1">
           <Icon :src="icon" r=156 g=165 b=173 class="w-full h-full" />
@@ -10,10 +10,14 @@
       <span class="font-semibold w-full text-left text-gray-400 capitalize">
         {{ title }}
       </span>
+
+      <div class="flex-none w-10 h-10 p-2">
+        <Icon :src="showingDropdown ? 'caret-down' : 'caret-left'" r=156 g=165 b=173 class="w-full h-full" />
+      </div>
     </button>
 
     <transition-group name="fade">
-      <div v-if="showingDropdown" class="flex flex-col w-full h-auto">
+      <div v-if="showingDropdown" class="flex flex-col w-full h-auto pl-4">
         <slot />
       </div>
     </transition-group>
@@ -44,7 +48,7 @@
   export default defineComponent({
     data() {
       return {
-        showingDropdown: this.$props.open,
+        showingDropdown: this.$props.active,
       };
     },
 
@@ -55,7 +59,7 @@
     props: {
       title: String,
       icon: String,
-      open: {
+      active: {
         type: Boolean,
         default: false,
       },
