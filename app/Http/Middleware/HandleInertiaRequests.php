@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Menu;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -58,6 +59,25 @@ class HandleInertiaRequests extends Middleware
                 $path = resource_path('lang/' . app()->getLocale() . '.json');
 
                 return file_exists($path) ? json_decode(file_get_contents($path), true) : [];
+            },
+
+            '$menus' => function () {
+                $user = request()->user();
+
+                if (empty($user)) {
+                    return [];
+                }
+                
+                $menus = Menu::whereNull('parent_id')->orderBy('position')->with(['childs'])->get();
+
+                return $menus->filter(function ($menu) use ($user) {
+                    $permissions = $menu->permissions->pluck('name')->toArray();
+                    
+                    if ($permissions)
+                        return $user->can($permissions);
+
+                    return true;
+                });
             },
         ]);
     }
