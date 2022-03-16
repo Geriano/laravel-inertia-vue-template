@@ -7,7 +7,9 @@
   export default defineComponent({
     setup() {
       return props => {
-        const menus = usePage().props.value.$menus
+        const menus = Array.isArray(usePage().props.value.$menus)
+          ? usePage().props.value.$menus
+          : Object.values(usePage().props.value.$menus)
 
         const generate = (menus, attrs) => {
           return menus.map(menu => {
