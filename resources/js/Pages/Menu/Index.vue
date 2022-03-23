@@ -92,7 +92,7 @@
           <div class="w-full sm:w-2/3">
             <p for="icon" class="lowercase first-letter:capitalize">{{ __('icon') }}</p>
 
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between space-x-2">
               <Multiselect 
                 v-model="form.icon"
                 :options="icons"
@@ -101,9 +101,9 @@
                 :searchable="true"
                 :createTag="false"
                 class="uppercase placeholder:capitalize" 
-                :placeholder="__('choose route or write url')" />
+                :placeholder="__('select icon')" />
 
-              <div class="flex-none w-12 h-12 p-2">
+              <div v-if="form.icon && typeof form.icon === 'string'" class="flex-none w-12 h-12 p-2">
                 <Icon :src="form.icon" r="51" g="65" b="85" />
               </div>
             </div>

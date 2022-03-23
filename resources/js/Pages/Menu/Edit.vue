@@ -9,7 +9,7 @@
         <div class="flex flex-col space-y-2 p-4">
           <label for="name" class="first-letter:capitalize lowercase text-sm">{{ __('name') }}</label>
 
-          <input v-model="form.name" type="text" name="name" class="w-full sm:w-2/3 bg-white text-sm border border-slate-300 rounded-md shadow placeholder:capitalize" :placeholder="__('menu name')" autofocus>
+          <input v-model="form.name" type="text" name="name" class="w-full sm:w-2/3 bg-white text-sm border border-slate-300 rounded-md shadow placeholder:capitalize" :placeholder="__('menu name')" autofocus autocomplete="off">
 
           <transition name="fade">
             <p v-if="form.errors.name" class="text-xs text-red-500">{{ form.errors.name }}</p>
@@ -26,7 +26,8 @@
               :searchable="true"
               :createTag="true"
               class="uppercase placeholder:capitalize" 
-              :placeholder="__('choose route or write url')" />
+              :placeholder="__('choose route or write url')"
+              autocomplete="off" />
 
             <transition name="fade">
               <p v-if="form.errors.route_or_url" class="text-xs text-red-500">{{ form.errors.route_or_url }}</p>
@@ -49,7 +50,8 @@
               :createTag="false"
               mode="tags"
               class="uppercase placeholder:capitalize" 
-              :placeholder="__('select routes')" />
+              :placeholder="__('select routes')"
+              autocomplete="off" />
 
 
             <transition name="fade">
@@ -77,7 +79,8 @@
               :createTag="false"
               mode="tags"
               class="uppercase placeholder:capitalize" 
-              :placeholder="__('select permissions')" />
+              :placeholder="__('select permissions')"
+              autocomplete="off" />
             
             
             <transition name="fade">
@@ -87,6 +90,27 @@
             <ul class="flex-wrap text-xs text-slate-400 mt-2 list-disc list-inside">
               <li class="first-letter:capitalize lowercase">{{ __('if the user has the selected permission then the menu will appear') }}</li>
             </ul>
+          </div>
+
+          <div class="w-full sm:w-2/3">
+            <p for="icon" class="lowercase first-letter:capitalize">{{ __('icon') }}</p>
+
+            <div class="flex items-center justify-between space-x-2">
+              <Multiselect 
+                v-model="form.icon"
+                :options="icons"
+                :clearOnSearch="false"
+                :clearOnSelect="false"
+                :searchable="true"
+                :createTag="false"
+                class="uppercase placeholder:capitalize" 
+                :placeholder="__('select icon')"
+                autocomplete="off" />
+
+              <div v-if="form.icon && typeof form.icon === 'string'" class="flex-none w-12 h-12 p-2">
+                <Icon :src="form.icon" r="51" g="65" b="85" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -121,6 +145,7 @@
     props: {
       menu: Object,
       menus: Array,
+      icons: Array,
       routes: Array,
       permissions: Array,
     },
