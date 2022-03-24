@@ -21,3 +21,5 @@ Route::prefix('/menu')->name('menu.')->controller(App\Http\Controllers\MenuContr
   Route::patch('/{menu}/set-parent', 'setParent')->name('set-parent');
 });
 Route::resource('menu', App\Http\Controllers\MenuController::class)->except(['create', 'show']);
+
+Route::get('/data-table', [App\Http\Controllers\Examples\DataTableController::class, 'index'])->name('data-table');
