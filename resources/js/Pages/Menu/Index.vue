@@ -104,7 +104,7 @@
                 :placeholder="__('select icon')" />
 
               <div v-if="form.icon && typeof form.icon === 'string'" class="flex-none w-12 h-12 p-2">
-                <Icon :src="form.icon" r="51" g="65" b="85" />
+                <Icon :src="form.icon" class="w-full h-full" r="51" g="65" b="85" />
               </div>
             </div>
           </div>
