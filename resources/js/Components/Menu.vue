@@ -11,29 +11,39 @@
           ? usePage().props.value.$menus
           : Object.values(usePage().props.value.$menus)
 
+        const active = menu => {
+          if (route().current(menu.route_or_url)) {
+            return true
+          }
+          
+          for (let child of menu.childs) {
+            if (active(child)) {
+              return true
+            }
+          }
+
+          return false
+        }
+
         const generate = (menus, attrs) => {
           return menus.map(menu => {
             const childs = menu.childs
 
             if (childs.length) {
-              const active = menu.routes.find(name => route().current(name)) !== undefined || menu.childs.find(child => child.routes.find(name => route().current(name))) !== undefined
-
               return h(NavLinks, {
                 ...attrs,
-                active,
+                active: active(menu),
                 title: __(menu.name),
                 icon: menu.icon,
               }, generate(childs, {
                 child: menu.parent_id !== null || menu.parent_id !== undefined,
               }))
             } else {
-              const active = menu.routes.find(name => route().current(name)) !== undefined
-
               return h(NavLink, {
                 ...attrs,
                 href: menu.route_or_url.startsWith('http') ? menu.route_or_url : menu.route_or_url === '#' ? '#' : route(menu.route_or_url),
                 icon: menu.icon,
-                active,
+                active: active(menu),
               }, __(menu.name))
             }
           })
