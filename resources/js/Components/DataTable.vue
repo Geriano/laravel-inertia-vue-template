@@ -24,7 +24,7 @@
             <slot name="head" :table="table" :sort="sort" />
           </thead>
 
-          <tfoot class="bg-slate-200 sticky bottom-0">
+          <tfoot class="bg-slate-200 sticky bottom-0 z-10">
             <slot name="foot" :table="table" :sort="sort" />
           </tfoot>
 

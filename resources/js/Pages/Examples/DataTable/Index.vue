@@ -3,29 +3,29 @@
     <DataTable route="api.v1.superuser.data-table">
       <template v-slot:head="props">
         <tr class="border-b border-slate-300">
-          <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'no' && props.table.sort.order" :sortable="false">no</DTh>
-          <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'profile' && props.table.sort.order" @click.prevent="props?.sort('profile')">profile</DTh>
+          <DTh class="px-3 py-2 uppercase" :sortable="false">no</DTh>
+          <DTh class="px-3 py-2 uppercase" :sortable="false" @click.prevent="props?.sort('profile')">profile</DTh>
           <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'name' && props.table.sort.order" @click.prevent="props?.sort('name')">name</DTh>
           <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'username' && props.table.sort.order" @click.prevent="props?.sort('username')">username</DTh>
           <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'email' && props.table.sort.order" @click.prevent="props?.sort('email')">email</DTh>
           <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'verified_at' && props.table.sort.order" @click.prevent="props?.sort('verified_at')">verified at</DTh>
           <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'created_at' && props.table.sort.order" @click.prevent="props?.sort('created_at')">created at</DTh>
           <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'deleted_at' && props.table.sort.order" @click.prevent="props?.sort('deleted_at')">deleted at</DTh>
-          <DTh class="px-3 py-2 uppercase" :sort="props.table.sort.key === 'action' && props.table.sort.order" :sortable="false">action</DTh>
+          <DTh class="px-3 py-2 uppercase" :sortable="false">action</DTh>
         </tr>
       </template>
 
       <template v-slot:foot>
         <tr class="border-t border-slate-300 hover:bg-slate-100">
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">no</th>
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">profile</th>
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">name</th>
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">username</th>
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">email</th>
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">verified at</th>
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">created at</th>
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">deleted at</th>
-          <th class="text-sm px-3 py-[1px] uppercase" :sortable="false">action</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">no</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">profile</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">name</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">username</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">email</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">verified at</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">created at</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">deleted at</th>
+          <th class="text-sm px-3 py-1 uppercase" :sortable="false">action</th>
         </tr>
       </template>
 
