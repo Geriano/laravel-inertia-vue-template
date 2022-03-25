@@ -23,3 +23,6 @@ Route::prefix('/menu')->name('menu.')->controller(App\Http\Controllers\MenuContr
 Route::resource('menu', App\Http\Controllers\MenuController::class)->except(['create', 'show']);
 
 Route::get('/data-table', [App\Http\Controllers\Examples\DataTableController::class, 'index'])->name('data-table');
+Route::prefix('/element')->name('element.')->controller(App\Http\Controllers\Examples\Element::class)->group(function () {
+  Route::get('general', 'general')->name('general');
+});
