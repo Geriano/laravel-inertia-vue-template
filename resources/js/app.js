@@ -48,7 +48,7 @@ Object.defineProperty(window, 'pushFlashMessage', {
         if (flash.timer) {
             setTimeout(() => {
                 window.$flashes.value = window.$flashes.value.filter((f, i) => i !== window.$flashes.value.indexOf(flash))
-            }, 5000)
+            }, flash.timer)
         }
     },
 })
