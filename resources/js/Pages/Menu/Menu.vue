@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     :draggable="true"
     @dragstart="start($event, menu)"
     @dragend="end"
@@ -8,23 +8,23 @@
     @dragleave.prevent
     @drop="drop($event, menu)"
     :class="drag && 'bg-slate-100'"
-    class="flex items-center bg-slate-200 border border-slate-300 rounded rounded-r-none border-r-0 p-2 uppercase">
-    <div class="flex-wrap w-full">{{ menu.position }}  - {{ __(menu.name) }}</div>
+    class="flex items-center bg-slate-200 border border-slate-300 rounded rounded-r-none border-r-0 p-2 uppercase text-left">
+    <div :draggable="false" class="flex-wrap w-full">{{ menu.position }}  - {{ __(menu.name) }}</div>
 
-    <div class="flex-none flex items-center space-x-1">
-      <Link v-if="menu.parent_id" :href="route('superuser.menu.remove-parent', menu.id)" method="patch" as="button" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
+    <div :draggable="false" class="flex-none flex items-center space-x-1">
+      <Link v-if="menu.parent_id" :href="route('superuser.menu.remove-parent', menu.id)" :draggable="false" method="patch" as="button" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
         <Icon src="caret-left" r="51" g="65" b="85" class="w-full h-full" />
       </Link>
 
-      <Link v-if="menu.position > 1" :href="route('superuser.menu.set-parent', menu.id)" method="patch" as="button" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
+      <Link v-if="menu.position > 1" :href="route('superuser.menu.set-parent', menu.id)" :draggable="false" method="patch" as="button" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
         <Icon src="caret-right" r="51" g="65" b="85" class="w-full h-full" />
       </Link>
 
-      <button v-if="minimize" @click.prevent="$emit('toggle')" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
+      <button v-if="minimize" @click.prevent="$emit('toggle')" :draggable="false" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
         <Icon :src="open ? 'minus' : 'plus'" r="51" g="65" b="85" class="w-full h-full" />
       </button>
 
-      <Link :href="route('superuser.menu.edit', menu.id)" class="bg-blue-600 text-slate-200 border border-blue-700 rounded shadow p-1 w-6 h-6">
+      <Link :href="route('superuser.menu.edit', menu.id)" :draggable="false" class="bg-blue-600 text-slate-200 border border-blue-700 rounded shadow p-1 w-6 h-6">
         <Icon src="pen" class="w-full h-full" />
       </Link>
 
@@ -32,7 +32,7 @@
         <Icon src="trash" class="w-full h-full" />
       </button>
     </div>
-  </div>
+  </button>
 </template>
 
 <script>
