@@ -9,7 +9,7 @@
         <div class="flex w-full sm:w-auto items-center space-x-2 justify-between sm:justify-start">
           <span class="lowercase first-letter:capitalize">{{ __('per page') }}</span>
 
-          <select v-model="config.perPage" @change.prevent="fetch" class="bg-transparent border border-slate-300 rounded-md p-1">
+          <select v-model="config.perPage" @change.prevent="refresh" class="bg-transparent border border-slate-300 rounded-md p-1">
             <option value="10">10</option>
             <option value="10">15</option>
             <option value="10">25</option>
@@ -18,12 +18,12 @@
             <option value="10">500</option>
           </select>
 
-          <button v-if="softDeletes" @click.prevent="config.withTrashed = ! config.withTrashed; fetch()" class="border border-slate-300 rounded px-3 py-1 uppercase">
+          <button v-if="softDeletes" @click.prevent="config.withTrashed = ! config.withTrashed; refresh()" class="border border-slate-300 rounded px-3 py-1 uppercase">
             {{ __(config.withTrashed ? 'without trashed' : 'with trashed') }}
           </button>
         </div>
 
-        <input type="search" v-model="config.search" @input.prevent="fetch()" class="bg-transparent sm:w-2/5 border border-slate-300 rounded-md placeholder:capitalize text-xs" :placeholder="__('search something')">
+        <input type="search" v-model="config.search" @input.prevent="refresh" class="bg-transparent sm:w-2/5 border border-slate-300 rounded-md placeholder:capitalize text-xs" :placeholder="__('search something')">
       </div>
 
       <div class="overflow-auto border border-slate-300 rounded-md mb-2 max-h-[25rem]">
@@ -37,7 +37,7 @@
           </tfoot>
 
           <tbody>
-            <slot name="body" v-for="(item, i) in data.data" :key="i" :item="item" :i="i" />
+            <slot name="body" v-for="(item, i) in data.data" :key="i" :item="item" :i="i" :refresh="refresh" />
           </tbody>
         </table>
       </div>
@@ -99,7 +99,7 @@
     },
 
     methods: {
-      fetch() {
+      refresh() {
         this.loading = true
 
         const data = {}
@@ -123,20 +123,20 @@
           this.config.sort.order = 'asc'
         }
 
-        this.fetch()
+        this.refresh()
       },
 
       page(link) {
         if (link.url) {
           this.config.url = link.url
-          this.fetch()
+          this.refresh()
         }
       },
     },
 
     mounted() {
       this.config.url = route(this.route)
-      return this.fetch()
+      return this.refresh()
     },
   })
 </script>

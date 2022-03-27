@@ -61,11 +61,11 @@
                     {{ __('reset password') }}
                   </button>
 
-                  <button v-if="props.item.deleted_at" @click.prevent="recovery(props.item)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
+                  <button v-if="props.item.deleted_at" @click.prevent="recovery(props.item, props.refresh)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
                     {{ __('recovery') }}
                   </button>
 
-                  <button @click.prevent="destroy(props.item)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
+                  <button @click.prevent="destroy(props.item, props.refresh)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
                     {{ __('delete') }}
                   </button>
                 </div>
@@ -102,8 +102,7 @@
     },
 
     methods: {
-      destroy(user) {
-        Inertia.on('success', () => Inertia.reload())
+      destroy(user, refresh) {
         return Swal.fire({
           icon: 'question',
           html: `<span class="first-letter:capitalize lowercase">${__(user.deleted_at ? 'are you want to delete permanently' : 'are you sure want to delete')}?</span>`,
@@ -111,6 +110,8 @@
         }).then(response => {
           if (response.isConfirmed) {
             Inertia.delete(route('superuser.user.destroy', user.id) + (user.deleted_at ? '?force=1' : ''))
+            
+            setTimeout(() => refresh(), 500)
           }
         })
       },
@@ -119,8 +120,10 @@
         return Inertia.patch(route('superuser.user.reset-password', user.id))
       },
 
-      recovery(user) {
-        return Inertia.patch(route('superuser.user.recovery', user.id))
+      recovery(user, refresh) {
+        Inertia.patch(route('superuser.user.recovery', user.id))
+
+        return setTimeout(() => refresh(), 500)
       },
     },
 
