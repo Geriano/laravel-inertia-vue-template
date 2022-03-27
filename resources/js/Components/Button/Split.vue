@@ -6,12 +6,10 @@
       </div>
       
       <div @click.prevent="open = ! open" class="relative flex-none border-l w-8 h-8 p-2">
-        <Icon src="caret-down" class="w-full h-full" r="51" g="65" b="85" />
+        <Icon src="caret-down" class="w-full h-full" :r="$props.r === null ? 51 : $props.r" :g="$props.g === null ? 65 : $props.g" :b="$props.b === null ? 85 : $props.b" />
 
         <transition name="fade">
-          <div v-if="open" class="absolute top-[102.5%] left-0 flex flex-col bg-slate-50 border border-slate-200 rounded-md py-2 shadow-md">
-            <slot name="actions" />
-          </div>
+          <slot v-if="open" name="actions" />
         </transition>
       </div>
     </div>
@@ -25,6 +23,22 @@
   export default defineComponent({
     components: {
       Icon,
+    },
+
+    props: {
+      r: {
+        type: Number,
+        default: null,
+      },
+      g: {
+        type: Number,
+        default: null,
+      },
+      b: {
+        type: Number,
+        default: null,
+      },
+      class: String,
     },
 
     data() {
