@@ -101,8 +101,6 @@
       BtnSplit,
     },
 
-    data() {return {console}},
-
     methods: {
       destroy(user) {
         Inertia.on('success', () => Inertia.reload())
