@@ -5,11 +5,11 @@
         <h3 class="text-xl font-semibold first-letter:capitalize lowercase">{{ __('create new role') }}</h3>
       </div>
 
-      <form @submit.prevent="submit" class="w-full bg-slate-100 border border-slate-200 rounded-md shadow-xl">
+      <form @submit.prevent="submit" class="w-full bg-white border border-slate-200 rounded-md shadow-xl">
         <div class="flex flex-col space-y-2 p-4">
           <label for="name" class="capitalize">{{ __('role name') }}</label>
 
-          <input v-model="form.name" type="text" name="name" :class="form.errors.name && 'border-red-500'" class="bg-slate-50 border rounded-md shadow-md w-full sm:w-2/3 py-1 placeholder:capitalize" :placeholder="__('role name')">
+          <input v-model="form.name" type="text" name="name" :class="form.errors.name && 'border-red-500'" class="bg-white border border-slate-300 rounded w-full sm:w-2/3 py-2 placeholder:capitalize" :placeholder="__('role name')">
         </div>
 
         <div class="w-full sm:w-2/3 pl-4 pr-1 mb-2">
