@@ -1,156 +1,111 @@
 <template>
   <div class="flex flex-col w-full h-full space-y-2 bg-slate-100 border rounded-md shadow-md p-2">
-    <div class="flex flex-col sm:flex-row items-center w-full space-y-2 sm:space-y-0 sm:space-x-2 text-sm">
-      <div class="w-full sm:w-1/3 flex items-center space-x-2">
-        <Link v-if="route().current('user.create') === false" :href="route('superuser.user.create')" class="bg-green-500 border border-green-600 rounded-md px-3 py-1 uppercase shadow">
-          {{ __('create') }}
-        </Link>
+    <DataTable route="api.v1.superuser.user.paginate" :softDeletes="true">
+      <template v-slot:head="{sort, config}">
+        <tr class="border-b border-slate-300">
+          <DTh class="sticky left-0 px-3 py-1" :sortable="false">no</DTh>
+          <DTh class="px-3 py-1" :sortable="false">profile</DTh>
+          <DTh class="px-3 py-1" :sort="config.sort.key === 'name' && config.sort.order" @click.prevent="sort('name')">name</DTh>
+          <DTh class="px-3 py-1" :sort="config.sort.key === 'username' && config.sort.order" @click.prevent="sort('username')">username</DTh>
+          <DTh class="px-3 py-1" :sort="config.sort.key === 'email' && config.sort.order" @click.prevent="sort('email')">email</DTh>
+          <DTh class="px-3 py-1" :sort="config.sort.key === 'verified_at' && config.sort.order" @click.prevent="sort('verified_at')">verified at</DTh>
+          <DTh class="px-3 py-1" :sort="config.sort.key === 'created_at' && config.sort.order" @click.prevent="sort('created_at')">created at</DTh>
+          <DTh class="px-3 py-1" :sort="config.sort.key === 'deleted_at' && config.sort.order" @click.prevent="sort('deleted_at')">deleted at</DTh>
+          <DTh class="px-3 py-1" :sortable="false">action</DTh>
+        </tr>
+      </template>
 
-        <Link :href="route('superuser.user.index', {with_trashed: ! withTrashed})" class="border border-slate-300 rounded-md px-3 py-1 uppercase shadow">
-          {{ __((withTrashed ? 'without' : 'with') + ' trashed') }}
-        </Link>
-      </div>
-      <div class="flex items-center space-x-2 w-full sm:w-2/3">
-        <div class="flex-none flex items-center space-x-4">
-          <label for="per_page" class="first-letter:capitalize lowercase">{{ __('per page') }}</label>
+      <template v-slot:foot>
+        <tr class="border-t border-slate-300 hover:bg-slate-100">
+          <DTh class="sticky left-0 text-sm" :sortable="false">no</DTh>
+          <DTh class="text-sm" :sortable="false">profile</DTh>
+          <DTh class="text-sm" :sortable="false">name</DTh>
+          <DTh class="text-sm" :sortable="false">username</DTh>
+          <DTh class="text-sm" :sortable="false">email</DTh>
+          <DTh class="text-sm" :sortable="false">verified at</DTh>
+          <DTh class="text-sm" :sortable="false">created at</DTh>
+          <DTh class="text-sm" :sortable="false">deleted at</DTh>
+          <DTh class="text-sm" :sortable="false">action</DTh>
+        </tr>
+      </template>
 
-          <select ref="perPage" @change.prevent="updateUserData" :value="perPage" name="per_page" class="bg-transparent border rounded-md text-xs">
-            <option value="2">2 </option>
-            <option value="10">10</option>
-          </select>
-        </div>
+      <template v-slot:body="props">
+        <tr class="hover:bg-slate-200">
+          <td class="sticky top-0 left-0 border border-slate-200 text-center">{{ props.i + 1 }}</td>
+          <td class="border border-slate-200 p-2">
+            <img :src="props.item.profile_photo_url" :alt="props.item.username" class="w-12 h-12 border border-slate-200 rounded-full mx-auto">
+          </td>
+          <td class="border border-slate-200 px-3 py-1 capitalize">{{ props.item.name }}</td>
+          <td class="border border-slate-200 px-3 py-1 lowercase">{{ props.item.username }}</td>
+          <td class="border border-slate-200 px-3 py-1 uppercase">{{ props.item.email }}</td>
+          <td class="border border-slate-200 px-3 py-1">{{ props.item.verified_at && new Date(props.item.verified_at).toLocaleString('id') }}</td>
+          <td class="border border-slate-200 px-3 py-1">{{ props.item.created_at && new Date(props.item.created_at).toLocaleString('id') }}</td>
+          <td class="border border-slate-200 px-3 py-1">{{ props.item.deleted_at && new Date(props.item.deleted_at).toLocaleString('id') }}</td>
+          <td class="border border-slate-200 px-3 py-1">
+            <BtnSplit class="bg-slate-700 border-slate-800 text-slate-50 hover:bg-slate-800" :r="248" :g="250" :b="252">
+              <template #text>
+                <span class="font-semibold text-sm uppercase">action</span>
+              </template>
 
-        <input ref="search" @input.prevent="updateUserData" :value="search" type="text" class="w-full bg-transparent border rounded-md text-xs placeholder:capitalize" autofocus :placeholder="__('search something')">
-      </div>
-    </div>
+              <template #actions>
+                <div class="absolute top-[102.5%] right-0 grid bg-slate-700 border border-slate-800 rounded shadow z-10">
+                  <Link v-if="props.item.deleted_at === null" :href="route('superuser.user.profile', props.item.id)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
+                    {{ __('profile') }}
+                  </Link>
 
-    <div class="w-full overflow-auto h-full bg-inherit border rounded-md shadow">
-      <table class="w-full h-full min-h-fit border-collapse bg-inherit">
-        <thead class="uppercase text-center sticky top-0 bg-inherit z-10">
-          <tr>
-            <th class="border px-3 py-2">{{ __('no') }}</th>
-            <th class="border px-3 py-2">{{ __('profile') }}</th>
-            <th class="border px-3 py-2">{{ __('name') }}</th>
-            <th class="border px-3 py-2">{{ __('username') }}</th>
-            <th class="border px-3 py-2">{{ __('email') }}</th>
-            <th class="border px-3 py-2">{{ __('verified at') }}</th>
-            <th class="border px-3 py-2">{{ __('created at') }}</th>
-            <th class="border px-3 py-2">{{ __('deleted at') }}</th>
-            <th class="border px-3 py-2">{{ __('action') }}</th>
-          </tr>
-        </thead>
+                  <Link v-if="props.item.deleted_at === null" :href="route('superuser.user.edit', props.item.id)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
+                    {{ __('edit') }}
+                  </Link>
 
-        <tbody class="bg-inherit">
-          <tr v-for="(user, i) in users.data" :key="i" class="bg-inherit hover:bg-slate-200 z-0">
-            <td class="border p-2 text-center sticky left-0 bg-inherit">{{ i + 1 }}</td>
-            <td class="border p-2 text-center">
-              <img :src="user.profile_photo_url" :alt="user.username" class="w-14 h-14 object-center rounded-full border">
-            </td>
-            <td class="border p-2 capitalize">{{ user.name }}</td>
-            <td class="border p-2 lowercase">{{ user.username }}</td>
-            <td class="border p-2 lowercase">{{ user.email }}</td>
-            <td class="border p-2">{{ user.email_verified_at && new Date(user.email_verified_at).toLocaleString('id') }}</td>
-            <td class="border p-2">{{ user.created_at && new Date(user.created_at).toLocaleString('id') }}</td>
-            <td class="border p-2">{{ user.deleted_at && new Date(user.deleted_at).toLocaleString('id') }}</td>
-            <td class="border border-r-0 p-2">
-              <div class="text-xs px-2 flex flex-wrap items-center">
-                <Link v-if="user.deleted_at === null" :href="route('superuser.user.profile', user.id)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold bg-slate-50 border border-slate-300 rounded-md uppercase shadow">
-                  <Icon src="user" class="w-3 h-3" r="51" g="65" b="85" /> <span class="m-1">{{ __('profile') }}</span>
-                </Link>
+                  <button v-if="props.item.deleted_at === null" @click.prevent="reset(props.item)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
+                    {{ __('reset password') }}
+                  </button>
 
-                <Link v-if="user.deleted_at === null" :href="route('superuser.user.edit', user.id)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold text-slate-100 bg-blue-600 border border-blue-600 rounded-md uppercase shadow">
-                  <Icon src="pen" class="w-3 h-3" /> <span class="m-1">{{ __('edit') }}</span>
-                </Link>
-                
-                <button v-if="user.deleted_at === null" @click.prevent="reset(user)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold text-slate-100 bg-orange-500 border border-orange-500 rounded-md uppercase shadow">
-                  <Icon src="spinner" class="w-3 h-3" /> <span class="m-1">{{ __('reset password') }}</span>
-                </button>
+                  <button v-if="props.item.deleted_at" @click.prevent="recovery(props.item)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
+                    {{ __('recovery') }}
+                  </button>
 
-                <button v-if="user.deleted_at" @click.prevent="recovery(user)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold text-slate-100 bg-blue-600 border border-blue-600 rounded-md uppercase shadow">
-                  <Icon src="spinner" class="w-3 h-3" /> <span class="m-1">{{ __('recovery') }}</span>
-                </button>
-
-                <button @click.prevent="destroy(user)" class="m-1 flex flex-wrap items-center justify-center w-auto px-3 py-1 font-semibold text-slate-100 bg-red-600 border border-red-600 rounded-md uppercase shadow">
-                  <Icon src="trash" class="w-3 h-3" /> <span class="m-1">{{ __('delete') }}</span>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="flex items-center space-x-2">
-      <div class="flex-none flex-wrap w-1/4 text-sm first-letter:capitalize lowercase">
-        {{ __('displaying') }} {{ users.from }} {{ __('to') }} {{ users.to }} {{ __('from') }} {{ users.total }}
-      </div>
-
-      <div class="flex items-center justify-end w-full overflow-auto">
-        <Link v-for="(link, i) in users.links" :key="i" :href="url(link.url)" :class="(i === 0 && 'rounded-l-md') || (i + 1 === users.links.length && 'rounded-r-md') || (link.active && 'bg-blue-600 border-blue-700 text-slate-100')" class="border border-slate-300 px-2 shadow-xl" v-html="link.label" />
-      </div>
-    </div>
+                  <button @click.prevent="destroy(props.item)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
+                    {{ __('delete') }}
+                  </button>
+                </div>
+              </template>
+            </BtnSplit>
+          </td>
+        </tr>
+      </template>
+    </DataTable>
   </div>
 </template>
 
 <script>
   import { defineComponent } from 'vue'
-  import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
+  import { Link, usePage } from '@inertiajs/inertia-vue3'
   import { Inertia } from '@inertiajs/inertia'
   import Swal from 'sweetalert2'
   import Icon from '@/Components/Icon'
+  import DataTable from '@/Components/DataTable'
+  import DTh from '@/Components/DataTableTh'
+  import BtnSplit from '@/Components/Button/Split'
 
   export default defineComponent({
     props: {
       users: Object,
-      perPage: Number,
-      search: String,
     },
 
     components: {
       Link,
       Icon,
+      DataTable,
+      DTh,
+      BtnSplit,
     },
 
-    data() {
-      return {
-        withTrashed: usePage().props.value.withTrashed || false,
-      }
-    },
+    data() {return {console}},
 
     methods: {
-      updateUserData() {
-        const per_page = this.$refs.perPage?.value
-        const search = this.$refs.search?.value.trim()
-        const with_trashed = this.withTrashed
-        
-        Inertia.get(route('superuser.user.index', {per_page, search, with_trashed}))
-      },
-
-      url(base) {
-        if (!base) {
-          return '#'
-        }
-
-        const per_page = this.$refs.perPage?.value || this.$props.perPage
-        const search = (this.$refs.search?.value || this.$props.search)?.trim()
-        const url = new URLSearchParams()
-
-        if (per_page) {
-          url.append('per_page', per_page)
-        }
-
-        if (search && search !== '') {
-          url.append('search', search)
-        }
-
-        if (this.withTrashed) {
-          url.append('with_trashed', 1)
-        }
-
-        return base + (url.toString() && `&${url.toString()}`)
-      },
-
       destroy(user) {
+        Inertia.on('success', () => Inertia.reload())
         return Swal.fire({
           icon: 'question',
           html: `<span class="first-letter:capitalize lowercase">${__(user.deleted_at ? 'are you want to delete permanently' : 'are you sure want to delete')}?</span>`,
