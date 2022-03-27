@@ -1,6 +1,10 @@
 <template>
   <transition>
-    <div v-if="data?.data" class="bg-slate-100 p-4 rounded-md">
+    <div v-if="loading" class="bg-slate-100 p-4 rounded-md h-auto">
+      Loading...
+    </div>
+
+    <div v-else class="bg-slate-100 p-0 rounded-md">
       <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 sm:items-center justify-between mb-2">
         <div class="flex w-full sm:w-auto items-center space-x-2 justify-between sm:justify-start">
           <span class="lowercase first-letter:capitalize">{{ __('per page') }}</span>
@@ -56,10 +60,6 @@
         </div>
       </div>
     </div>
-
-    <div v-else class="bg-slate-100 p-4 rounded-md h-screen max-h-96">
-      Loading...
-    </div>
   </transition>
 </template>
 
@@ -92,12 +92,16 @@
           },
         },
 
+        loading: true,
+
         data: {},
       }
     },
 
     methods: {
       fetch() {
+        this.loading = true
+
         const data = {}
 
         if (this.config.perPage) data.perPage = this.config.perPage
@@ -108,6 +112,7 @@
         return axios.post(this.config.url, data)
                     .then(response => response.data)
                     .then(data => this.data = data)
+                    .finally(() => this.loading = false)
       },
 
       sort(key) {
