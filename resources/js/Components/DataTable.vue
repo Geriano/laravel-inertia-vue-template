@@ -5,7 +5,7 @@
         <div class="flex w-full sm:w-auto items-center space-x-2 justify-between sm:justify-start">
           <span class="lowercase first-letter:capitalize">{{ __('per page') }}</span>
 
-          <select @change.prevent="perPage = Number($event.target.value); fetch()" :value="perPage" class="bg-transparent border border-slate-300 rounded-md p-1">
+          <select v-model="config.perPage" @change.prevent="fetch" class="bg-transparent border border-slate-300 rounded-md p-1">
             <option value="10">10</option>
             <option value="10">15</option>
             <option value="10">25</option>
@@ -13,19 +13,23 @@
             <option value="10">100</option>
             <option value="10">500</option>
           </select>
+
+          <button v-if="softDeletes" @click.prevent="config.withTrashed = ! config.withTrashed; fetch()" class="border border-slate-300 rounded px-3 py-1 uppercase">
+            {{ __(config.withTrashed ? 'without trashed' : 'with trashed') }}
+          </button>
         </div>
 
-        <input type="search" @input.prevent="search = $event.target.value.trim(); fetch()" :value="search" class="bg-transparent sm:w-2/5 border border-slate-300 rounded-md placeholder:capitalize text-xs" :placeholder="__('search something')">
+        <input type="search" v-model="config.search" @input.prevent="fetch()" class="bg-transparent sm:w-2/5 border border-slate-300 rounded-md placeholder:capitalize text-xs" :placeholder="__('search something')">
       </div>
 
       <div class="overflow-auto border border-slate-300 rounded-md mb-2 max-h-[25rem]">
         <table class="w-full border-collapse">
           <thead class="bg-slate-200 sticky top-0 z-10">
-            <slot name="head" :table="table" :sort="sort" />
+            <slot name="head" :config="config" :sort="sort" />
           </thead>
 
           <tfoot class="bg-slate-200 sticky bottom-0 z-10">
-            <slot name="foot" :table="table" :sort="sort" />
+            <slot name="foot" :config="config" :sort="sort" />
           </tfoot>
 
           <tbody>
@@ -68,22 +72,27 @@
         type: String,
         required: true,
       },
+
+      softDeletes: {
+        type: Boolean,
+        default: false,
+      },
     },
 
     data() {
       return {
-        url: new String,
-        perPage: 10,
-        search: new String,
-
-        data: {},
-
-        table: {
+        config: {
+          url: new String,
+          perPage: 10,
+          search: new String,
+          withTrashed: false,
           sort: {
             key: new String,
             order: new String,
           },
         },
+
+        data: {},
       }
     },
 
@@ -91,21 +100,22 @@
       fetch() {
         const data = {}
 
-        if (this.perPage) data.perPage = this.perPage;
-        if (this.search.trim()) data.search = this.search;
-        if (this.table.sort.key.trim() && this.table.sort.order.trim()) data.sort = {key: this.table.sort.key, order: this.table.sort.order};
+        if (this.config.perPage) data.perPage = this.config.perPage
+        if (this.config.search.trim()) data.search = this.config.search
+        if (this.config.sort.key.trim() && this.config.sort.order.trim()) data.sort = {key: this.config.sort.key, order: this.config.sort.order}
+        if (this.softDeletes) data.withTrashed = this.config.withTrashed ? 1 : 0
 
-        return axios.post(this.url, data)
+        return axios.post(this.config.url, data)
                     .then(response => response.data)
                     .then(data => this.data = data)
       },
 
       sort(key) {
-        if (this.table.sort.key === key) {
-          this.table.sort.order = this.table.sort.order === 'asc' ? 'desc' : 'asc'
+        if (this.config.sort.key === key) {
+          this.config.sort.order = this.config.sort.order === 'asc' ? 'desc' : 'asc'
         } else {
-          this.table.sort.key = key
-          this.table.sort.order = 'asc'
+          this.config.sort.key = key
+          this.config.sort.order = 'asc'
         }
 
         this.fetch()
@@ -113,15 +123,15 @@
 
       page(link) {
         if (link.url) {
-          this.url = link.url
+          this.config.url = link.url
           this.fetch()
         }
       },
     },
 
     mounted() {
-      this.url = route(this.route)
-      return setTimeout(() => this.fetch(), 0)
+      this.config.url = route(this.route)
+      return this.fetch()
     },
   })
 </script>

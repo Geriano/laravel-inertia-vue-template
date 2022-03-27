@@ -1,5 +1,5 @@
 <template>
-  <th :class="$props.class" class="cursor-pointer">
+  <th :class="`${sortable && 'cursor-pointer'} ${$props.class}`">
     <div class="flex items-center space-x-2 justify-center">
       <span class="uppercase">
         <slot />
