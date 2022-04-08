@@ -43,7 +43,42 @@ class HandleInertiaRequests extends Middleware
                 'name' => config('app.name'),
             ],
 
-            'flash' => fn () => session()->get('flash') ?: [],
+            'flash' => function () {
+                $flash = session('flash', []);
+
+                if ($message = session('success')) {
+                    $flash[] = [
+                        'type' => 'success',
+                        'text' => $message,
+                        'timer' => 5000,
+                    ];
+                }
+
+                if ($message = session('error')) {
+                    $flash[] = [
+                        'type' => 'error',
+                        'text' => $message,
+                    ];
+                }
+
+                if ($message = session('warning')) {
+                    $flash[] = [
+                        'type' => 'warning',
+                        'text' => $message,
+                        'timer' => 5000,
+                    ];
+                }
+
+                if ($message = session('info')) {
+                    $flash[] = [
+                        'type' => 'info',
+                        'text' => $message,
+                        'timer' => 5000,
+                    ];
+                }
+
+                return $flash;
+            },
 
             '$user' => fn () => User::with(['roles', 'permissions'])->find(auth()?->id()),
             '$permissions' => fn () => $request->user()?->permissions,
