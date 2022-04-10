@@ -5,7 +5,7 @@
         <h3 class="text-xl font-semibold first-letter:capitalize lowercase">{{ __('create new menu') }}</h3>
       </div>
 
-      <form @submit.prevent="submit" class="w-full bg-slate-100 border border-slate-200 rounded-md shadow-xl">
+      <form @submit.prevent="submit" class="w-full bg-white border border-slate-200 rounded-md shadow-xl">
         <div class="flex flex-col space-y-2 p-4">
           <label for="name" class="first-letter:capitalize lowercase text-sm">{{ __('name') }}</label>
 
@@ -115,13 +115,13 @@
         </div>
 
         <div class="flex items-center justify-end bg-slate-200 px-4 py-2 space-x-2 text-xs">
-          <Link :href="route('superuser.menu.index')" class="bg-slate-50 border border-slate-300 rounded-md shadow px-3 py-2 uppercase font-bold">
-            {{ __('back') }}
-          </Link>
-
           <button class="bg-slate-700 text-slate-200 border border-slate-800 rounded-md shadow px-3 py-2 uppercase font-bold">
             {{ __('update') }}
           </button>
+
+          <Link :href="route('superuser.menu.index')" class="bg-slate-50 border border-slate-300 rounded-md shadow px-3 py-2 uppercase font-bold">
+            {{ __('back') }}
+          </Link>
         </div>
       </form>
     </div>
@@ -134,7 +134,6 @@
 
 <script>
   import { defineComponent } from 'vue'
-  import { Inertia } from '@inertiajs/inertia'
   import { Link, useForm } from '@inertiajs/inertia-vue3'
   import Multiselect from '@vueform/multiselect'
   import DashboardLayout from '@/Layouts/DashboardLayout'
