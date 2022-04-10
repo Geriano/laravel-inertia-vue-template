@@ -96,20 +96,11 @@
             <p for="icon" class="lowercase first-letter:capitalize">{{ __('icon') }}</p>
 
             <div class="flex items-center justify-between space-x-2">
-              <Multiselect 
-                v-model="form.icon"
-                :options="icons"
-                :clearOnSearch="false"
-                :clearOnSelect="false"
-                :searchable="true"
-                :createTag="false"
-                class="uppercase placeholder:capitalize" 
-                :placeholder="__('select icon')"
-                autocomplete="off" />
-
-              <div v-if="form.icon && typeof form.icon === 'string'" class="flex-none w-12 h-12 p-2">
-                <Icon :src="form.icon" class="w-full h-full" r="51" g="65" b="85" />
+              <div v-if="form.icon && typeof form.icon === 'string'" class="flex-none w-12 p-2">
+                <Icon :src="form.icon" class="text-slate-700 fa-xl" />
               </div>
+
+              <button @click.prevent="show = ! show" class="bg-blue-600 rounded-md px-3 py-1 uppercase text-white text-sm font-semibold">change</button>
             </div>
           </div>
         </div>
@@ -129,6 +120,10 @@
     <transition name="fade">
       <DataTable v-if="menus.length" :menus="menus" />
     </transition>
+
+    <transition name="fade">
+      <IconPicker v-if="show" @change="form.icon = $event; show = false" @close="show = false" />
+    </transition>
   </DashboardLayout>
 </template>
 
@@ -139,6 +134,7 @@
   import DashboardLayout from '@/Layouts/DashboardLayout'
   import Icon from '@/Components/Icon'
   import DataTable from './DataTable'
+  import IconPicker from './IconPicker'
 
   export default defineComponent({
     props: {
@@ -155,6 +151,7 @@
       Link,
       Multiselect,
       DataTable,
+      IconPicker,
     },
 
     data() {
@@ -166,6 +163,8 @@
           routes: [],
           permissions: [],
         }),
+
+        show: false,
       }
     },
 
