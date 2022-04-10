@@ -29,8 +29,7 @@ You can lookup demo in [here](http://laravel-inertia-vue.herokuapp.com) with use
 ![menu-top](https://user-images.githubusercontent.com/59258929/162608828-f204b4a8-e6ab-43bb-97d6-e42651eb1c11.jpeg)
 ![menu-builder](https://user-images.githubusercontent.com/59258929/162608832-6b8c53d6-6025-48fb-a0e1-e535bee1fcf1.jpeg)
 
-# How to
-## Setup this project
+## How to setup this project
 - You can clone this project then go to your project directory
 - Open your shell and installing dependencies
 ```shell
