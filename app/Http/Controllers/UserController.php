@@ -53,7 +53,7 @@ class UserController extends Controller
                         $query->where('name', 'like', $search)
                                 ->orWhere('username', 'like', $search)
                                 ->orWhere('email', 'like', $search)
-                                ->orWhere('verified_at', 'like', $search)
+                                ->orWhere('email_verified_at', 'like', $search)
                                 ->orWhere('created_at', 'like', $search)
                                 ->orWhere('deleted_at', 'like', $search);
                     })
