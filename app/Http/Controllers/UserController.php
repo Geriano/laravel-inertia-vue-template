@@ -44,24 +44,20 @@ class UserController extends Controller
             'sort.order' => 'nullable|in:asc,desc',
         ]);
         
-        $builder = User::withTrashed((bool) $request->input('withTrashed', 0))
+        return User::withTrashed((bool) $request->input('withTrashed', 0))
                         ->orderBy($request->input('sort.key', 'name'), $request->input('sort.order', 'asc'))
-                        ->whereNotIn('id', [1]);
-
-        if ($search = $request->input('search')) {
-            $builder = $builder->where(function ($query) use ($search) {
-                $search = '%' . $search . '%';
-
-                $query->where('name', 'like', $search)
-                        ->orWhere('username', 'like', $search)
-                        ->orWhere('email', 'like', $search)
-                        ->orWhere('email_verified_at', 'like', $search)
-                        ->orWhere('created_at', 'like', $search)
-                        ->orWhere('deleted_at', 'like', $search);
-            });
-        }
-
-        return $builder->paginate($request->input('perPage', 10));
+                        ->whereNotIn('id', [1])
+                        ->where(function ($query) use ($request) {
+                            $search = '%' . $request->input('search') . '%';
+            
+                            $query->where('name', 'like', $search)
+                                    ->orWhere('username', 'like', $search)
+                                    ->orWhere('email', 'like', $search)
+                                    ->orWhere('email_verified_at', 'like', $search)
+                                    ->orWhere('created_at', 'like', $search)
+                                    ->orWhere('deleted_at', 'like', $search);
+                        })
+                        ->paginate($request->input('perPage', 10));
     }
 
     /**
@@ -70,23 +66,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $withTrashed = ! empty($request->with_trashed);
-        $model = User::withTrashed($withTrashed)->with(['roles', 'permissions']);
-
-        return Inertia::render('User/Index')->with([
-            'withTrashed' => $withTrashed,
-            'perPage' => $perPage = (int) $request->per_page ?: 10,
-            'search' => $search = $request->search,
-            'users' => $search ? $model->where(function ($query) use ($search) {
-                $search = "%$search%";
-                $query->where('name', 'like', $search)
-                        ->orWhere('username', 'like', $search)
-                        ->orWhere('email', 'like', $search)
-                        ->orWhere('email_verified_at', 'like', $search)
-                        ->orWhere('created_at', 'like', $search)
-                        ->orWhere('deleted_at', 'like', $search);
-            })->paginate($perPage) : $model->paginate($perPage),
-        ]);
+        return Inertia::render('User/Index');
     }
 
     /**
@@ -121,18 +101,20 @@ class UserController extends Controller
         ];
 
         if ($user) {
-            flash(timer: null)->success(__('user has been created with default password ":password"', [
-                'password' => $password,
-            ]));
-
             Log::info('creating user', $context);
-        } else {
-            flash()->error(__("can't create user"));
 
+            $type = 'success';
+            $message = __('user has been created with default password ":password"', [
+                'password' => $password,
+            ]);
+        } else {
             Log::error('creating user', $context);
+
+            $type = 'error';
+            $message = __("can't create user");
         }
 
-        return redirect(route('superuser.user.index'));
+        return redirect()->route('user.index')->with($type, $message);
     }
 
     /**
@@ -141,7 +123,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return Inertia::render('User/Edit')->with('user', $user);
+        return Inertia::render('User/Edit')->with([
+            'user' => $user
+        ]);
     }
 
     /**
@@ -162,16 +146,18 @@ class UserController extends Controller
         ];
 
         if ($success) {
-            flash(timer: 1000)->success(__('user has been updated'));
-
             Log::info('updating user', $context);
-        } else {
-            flash()->error(__("can't update user"));
 
+            $type = 'success';
+            $message = __('user has been updated');
+        } else {
             Log::error('updating user', $context);
+
+            $type = 'error';
+            $message = __("can't update user");
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index')->with($type, $message);
     }
 
     /**
@@ -191,16 +177,18 @@ class UserController extends Controller
         ];
 
         if ($request->force ? $user->forceDelete() : $user->delete()) {
-            flash(timer: 1000)->success(__('user has been deleted'));
-
             Log::info('deleting user', $context);
-        } else {
-            flash()->error(__("can't delete user"));
 
+            $type = 'success';
+            $message = __('user has been deleted');
+        } else {
             Log::error('deleting user', $context);
+
+            $type = 'error';
+            $message = __("can't delete user");
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index')->with($type, $message);
     }
 
     /**
@@ -215,19 +203,21 @@ class UserController extends Controller
         ];
 
         if ($user->update([ 'password' => Hash::make($password) ])) {
-            flash(timer: null)->success(__('user @:username password successfully replaced with ":password"', [
+            Log::info('updating password', $context);
+
+            $type = 'success';
+            $message = __('user @:username password successfully replaced with ":password"', [
                 'username' => $user->username,
                 'password' => $password,
-            ]));
-
-            Log::info('updating password', $context);
+            ]);
         } else {
-            flash()->error(__("can't update password"));
-
             Log::error('updating password', $context);
+
+            $type = 'error';
+            $message = __("can't update password");
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index')->with($type, $message);
     }
 
     /**
@@ -243,23 +233,25 @@ class UserController extends Controller
         ];
 
         if ($user->save()) {
-            flash(timer: 1000)->success(__('user has been restored'));
-
             Log::info('restoring user', $context);
-        } else {
-            flash()->error("can't restore user");
 
+            $type = 'success';
+            $message = __('user has been restored');
+        } else {
             Log::error('restoring user', $context);
+
+            $type = 'error';
+            $message = __("can't restore user");
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index')->with($type, $message);
     }
 
     /**
      * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function profile(User $user)
+    public function show(User $user)
     {
         return Inertia::render('User/Profile')->with([
             'user' => $user,
@@ -294,16 +286,18 @@ class UserController extends Controller
         $success = $user->hasPermissionTo($permission->name) ? ($user->revokePermissionTo($permission) ? true : false) : ($user->givePermissionTo($permission) ? true : false);
 
         if ($success) {
-            flash(timer: 1000)->success(__('permission has been updated'));
-
             Log::info('toggling permission', $context);
-        } else {
-            flash()->error(__("can't update permission"));
 
+            $type = 'success';
+            $message = __('permission has been updated');
+        } else {
             Log::error('toggling permission', $context);
+
+            $type = 'error';
+            $message = __("can't update permission");
         }
 
-        return redirect()->back();
+        return redirect()->back()->with($type, $message);
     }
 
     /**
@@ -321,15 +315,17 @@ class UserController extends Controller
         $success = $user->hasRole($role->name) ? ($user->removeRole($role) ? true : false) : ($user->assignRole($role) ? true : false);
 
         if ($success) {
-            flash(timer: 1000)->success(__('role has been updated'));
-
             Log::info('toggling role', $context);
-        } else {
-            flash()->error(__("can't update role"));
 
+            $type = 'success';
+            $message = __('role has been updated');
+        } else {
             Log::error('toggling role', $context);
+
+            $type = 'error';
+            $message = __("can't update role");
         }
 
-        return redirect()->back();
+        return redirect()->back()->with($type, $message);
     }
 }

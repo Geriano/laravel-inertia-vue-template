@@ -2,9 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::resource('user', App\Http\Controllers\UserController::class)->except(['show']);
+Route::resource('user', App\Http\Controllers\UserController::class);
 Route::prefix('user')->name('user.')->controller(App\Http\Controllers\UserController::class)->group(function () {
-  Route::get('/{user}/profile', 'profile')->name('profile');
   Route::patch('/{user}/recovery', 'recovery')->name('recovery')->withTrashed();
   Route::patch('/{user}/reset-password', 'reset')->name('reset-password');
   Route::patch('/{user}/toggle-permission/{permission}', 'togglePermission')->name('toggle-permission');

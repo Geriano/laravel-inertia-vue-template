@@ -80,16 +80,9 @@ class HandleInertiaRequests extends Middleware
                 return $flash;
             },
 
-            '$user' => fn () => User::with(['roles', 'permissions'])->find(auth()?->id()),
+            '$user' => fn () => $request->user(),
             '$permissions' => fn () => $request->user()?->permissions,
             '$roles' => fn () => $request->user()?->roles,
-            // 'token' => function () use ($request) {
-            //     if ($user = $request->user()) {
-            //         $user->tokens()->delete();
-
-            //         return $user->createToken(uniqid())->plainTextToken;
-            //     }
-            // },
             '$translations' => function () {
                 $path = resource_path('lang/' . app()->getLocale() . '.json');
 
@@ -97,23 +90,26 @@ class HandleInertiaRequests extends Middleware
             },
 
             '$menus' => function () {
-                $user = request()->user();
-
-                if (empty($user)) {
-                    return [];
+                if ($user = request()->user()) {
+                    $menus = Menu::whereNull('parent_id')->orderBy('position')->with(['childs'])->get();
+    
+                    return $menus->filter(function ($menu) use ($user) {
+                        $permissions = $menu->permissions->pluck('name')->toArray();
+                        
+                        return $permissions ? $user->can($permissions) : true;
+                    });
                 }
-                
-                $menus = Menu::whereNull('parent_id')->orderBy('position')->with(['childs'])->get();
 
-                return $menus->filter(function ($menu) use ($user) {
-                    $permissions = $menu->permissions->pluck('name')->toArray();
-                    
-                    if ($permissions)
-                        return $user->can($permissions);
-
-                    return true;
-                });
+                return [];
             },
+
+            // 'token' => function () use ($request) {
+            //     if ($user = $request->user()) {
+            //         $user->tokens()->delete();
+
+            //         return $user->createToken(uniqid())->plainTextToken;
+            //     }
+            // },
         ]);
     }
 }

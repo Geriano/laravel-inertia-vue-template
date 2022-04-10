@@ -17,13 +17,9 @@ class MenuController extends Controller
      */
     public function __construct()
     {
-        $icons = array_map(fn ($file) => (new SplFileInfo($file))->getFilename(), glob(
-            sprintf('%s/*.svg', public_path('vendors/fontawesome/svgs/**'))
-        ));
-
-        $icons = array_map(fn ($file) => substr(
-            $file, 0, -4
-        ), $icons);
+        $icons = array_map(function ($file) {
+            return substr((new SplFileInfo($file))->getFilename(), 0, -4);
+        }, glob(public_path('/vendors/fontawesome/svgs/**/*.svg')));
         
         Inertia::share([
             'menus' => Menu::whereNull('parent_id')->with(['childs'])->orderBy('position', 'asc')->get(),
@@ -67,19 +63,21 @@ class MenuController extends Controller
 
         if ($menu) {
             $menu->permissions()->sync($post['permissions'] ?? []);
-            
-            flash()->success(__('menu ":name" has been created', [
+
+            $type = 'success';
+            $message = __('menu ":name" has been created', [
                 'name' => $menu->name,
-            ]));
+            ]);
 
             Log::info('create menu', $post);
         } else {
-            flash()->error(__('can\'t create menu'));
+            $type = 'error';
+            $message = __('can\'t create menu');
 
             Log::error('create menu', $post);
         }
 
-        return redirect()->back();
+        return redirect()->route('superuser.menu.index')->with($type, $message);
     }
 
     /**
@@ -117,18 +115,20 @@ class MenuController extends Controller
         if ($updated) {
             $menu->permissions()->sync($request->get('permissions', []));
 
-            flash()->success(__('menu ":name" has been updated', [
-                'name' => $menu->name,
-            ]));
-
             Log::info('update menu', $request->all());
-        } else {
-            flash()->error(__('can\'t update menu'));
 
+            $type = 'success';
+            $message = __('menu ":name" has been updated', [
+                'name' => $menu->name,
+            ]);
+        } else {
             Log::error('update menu', $request->all());
+
+            $type = 'error';
+            $message = __('can\'t update menu');
         }
 
-        return redirect()->to(route('superuser.menu.index'));
+        return redirect()->route('superuser.menu.index')->with($type, $message);
     }
 
     /**
@@ -140,18 +140,20 @@ class MenuController extends Controller
     public function destroy(Menu $menu)
     {
         if ($menu->delete()) {
-            flash()->success(__('menu ":name" has been deleted', [
-                'name' => $menu->name,
-            ]));
-
             Log::info('delete menu', $menu->toArray());
-        } else {
-            flash()->error(__('can\'t delete menu'));
 
+            $type = 'success';
+            $message = __('menu ":name" has been deleted', [
+                'name' => $menu->name,
+            ]);
+        } else {
             Log::error('delete menu', $menu->toArray());
+
+            $type = 'error';
+            $message = __('can\'t delete menu');
         }
 
-        return redirect()->route('superuser.menu.index');
+        return redirect()->route('superuser.menu.index')->with($type, $message);
     }
 
     /**
@@ -199,7 +201,7 @@ class MenuController extends Controller
                 ]);
             });
 
-        return redirect()->back();
+        return redirect()->route('superuser.menu.index')->with('success', 'Position has been updated');
     }
 
     /**
@@ -221,7 +223,7 @@ class MenuController extends Controller
             ->orderBy('position')
             ->increment('position');
 
-        return redirect()->back();
+        return redirect()->route('superuser.menu.index')->with('success', 'Position has been updated');
     }
 
     /**
@@ -248,6 +250,6 @@ class MenuController extends Controller
                 ->decrement('position');
         }
 
-        return redirect()->back();
+        return redirect()->route('superuser.menu.index')->with('success', 'Position has been updated');
     }
 }

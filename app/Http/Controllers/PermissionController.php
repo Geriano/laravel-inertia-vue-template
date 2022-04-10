@@ -6,6 +6,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class PermissionController extends Controller
@@ -39,12 +40,18 @@ class PermissionController extends Controller
         if ($permission = Permission::create($post)) {
             Role::where('name', 'superuser')->first()->givePermissionTo($permission);
 
-            flash()->success(__('permission has been created'));
+            Log::info('create permission', $permission->toArray());
+
+            $type = 'success';
+            $message = __('permission has been created');
         } else {
-            flash()->error(__("can't create permission"));
+            Log::error('create permission', $post);
+
+            $type = 'error';
+            $message = __('can\'t create permission');
         }
         
-        return redirect()->back();
+        return redirect()->route('superuser.permission.index')->with($type, $message);
     }
 
     /**
@@ -56,11 +63,17 @@ class PermissionController extends Controller
     public function destroy(Permission $permission)
     {
         if ($permission->delete()) {
-            flash()->success(__('permission has been deleted'));
+            Log::info('delete permission', $permission->toArray());
+
+            $type = 'success';
+            $message = __('permission has been deleted');
         } else {
-            flash()->error(__("can't delete permission"));
+            Log::error('delete permission', $permission->toArray());
+            
+            $type = 'error';
+            $message = __('can\'t delete permission');
         }
 
-        return redirect()->back();
+        return redirect()->route('superuser.permission.index')->with($type, $message);
     }
 }

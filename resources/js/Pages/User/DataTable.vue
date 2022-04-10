@@ -49,7 +49,7 @@
 
               <template #actions>
                 <div class="absolute top-[102.5%] right-0 grid bg-slate-700 border border-slate-800 rounded shadow z-10">
-                  <Link v-if="props.item.deleted_at === null" :href="route('superuser.user.profile', props.item.id)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
+                  <Link v-if="props.item.deleted_at === null" :href="route('superuser.user.show', props.item.id)" class="text-sm uppercase px-3 py-1 hover:bg-slate-800">
                     {{ __('profile') }}
                   </Link>
 

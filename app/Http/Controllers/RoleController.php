@@ -18,8 +18,8 @@ class RoleController extends Controller
     public function __construct()
     {
         Inertia::share([
-            'permissions' => Permission::orderBy('name', 'asc')->get(),
-            'roles' => Role::orderBy('name', 'asc')->get(),
+            'permissions' => Permission::orderBy('name')->get(),
+            'roles' => Role::orderBy('name')->get(),
         ]);
     }
 
@@ -46,41 +46,31 @@ class RoleController extends Controller
             'permissions.*' => 'integer|exists:permissions,id',
         ]);
 
-        DB::transaction(function () use (&$error, &$role, &$post) {
-            try {
-                $role = Role::create([
-                    'name' => $post['name'],
-                    'guard_name' => 'web',
-                ]);
+        $role = Role::create([
+            'name' => $post['name'],
+            'guard_name' => 'web',
+        ]);
 
-                $role->permissions()->sync($post['permissions']);
-            } catch (\Throwable $e) {
-                $error = $e->getMessage();
+        $role->permissions()->sync($post['permissions']);
 
-                return throw $e;
-            }
-        });
-
-        if (isset($error)) {
-            flash()->error(__('an error occurred while creating the role. error message ":message"', [
-                'message' => $error
-            ]));
-
-            Log::error('create role', [
-                'message' => $error,
-            ]);
-        } else if (isset($role)) {
-            flash()->success(__('role ":name" has been created', [
-                'name' => $role->name,
-            ]));
-
+        if ($role) {
             Log::info('create role', [
                 'name' => $role->name,
                 'permissions' => $role->permissions->pluck('name')->toArray(),
             ]);
+
+            $type = 'success';
+            $message = __('role ":name" has been created', [
+                'name' => $role->name,
+            ]);
+        } else {
+            Log::error('create role', $post);
+
+            $type = 'error';
+            $message = __('can\'t create role');
         }
         
-        return redirect()->back();
+        return redirect()->route('superuser.role.index')->with($type, $message);
     }
 
     /**
@@ -94,23 +84,38 @@ class RoleController extends Controller
             'permission' => 'required|integer|exists:permissions,id',
         ]);
 
-        $role->permissions()->detach([
+        $detached = $role->permissions()->detach([
             (int) $request->permission
         ]);
 
         $permission = Permission::find($request->permission);
 
-        flash()->success(__('permission ":name" has been detached from role ":role"', [
-            'name' => $permission->name,
-            'role' => $role->name,
-        ]));
+        if ($detached) {
+            Log::info('detach permission', [
+                'role' => $role->name,
+                'permission' => $permission->name,
+            ]);
 
-        Log::info('detach permission', [
-            'role' => $role->name,
-            'permission' => $permission->name,
-        ]);
+            $type = 'success';
+            $message = __('permission ":name" has been detached from role ":role"', [
+                'name' => $permission->name,
+                'role' => $role->name,
+            ]);
+        } else {
+            Log::error('detach permission', [
+                'role' => $role->name,
+                'permission' => $permission->name,
+            ]);
 
-        return redirect()->back();
+            $type = 'error';
+            $message = __('can\'t detach permission ":name" from role ":role"', [
+                'name' => $permission->name,
+                'role' => $role->name,
+            ]);
+        }
+
+
+        return redirect()->route('superuser.role.index')->with($type, $message);
     }
 
     /**
@@ -143,24 +148,26 @@ class RoleController extends Controller
         if ($role->update(['name' => mb_strtolower($post['name'])])) {
             $role->permissions()->sync($post['permissions']);
 
-            flash()->success(__('role ":name" has been updated', [
-                'name' => $role->name,
-            ]));
-
             Log::info('update role permissions', [
                 'name' => $role->name,
                 'permissions' => $role->permissions()->get()->pluck('name')->toArray(),
             ]);
-        } else {
-            flash()->error(__('can\'t update role'));
 
+            $type = 'success';
+            $message = __('role ":name" has been updated', [
+                'name' => $role->name,
+            ]);
+        } else {
             Log::error('update role permissions', [
                 'name' => $role->name,
                 'permissions' => $role->permissions()->get()->pluck('name')->toArray(),
             ]);
+
+            $type = 'error';
+            $message = __('can\'t update role');
         }
         
-        return redirect(route('superuser.role.index'));
+        return redirect()->route('superuser.role.index')->with($type, $message);
     }
 
     /**
@@ -174,17 +181,19 @@ class RoleController extends Controller
         $context = $role->toArray();
 
         if ($role->delete()) {
-            flash()->success(__('role ":name" has been deleted', [
-                'name' => $role->name,
-            ]));
-
             Log::info('delete role', $context);
-        } else {
-            flash()->error(__('can\'t delete role'));
 
+            $type = 'success';
+            $message = __('role ":name" has been deleted', [
+                'name' => $role->name,
+            ]);
+        } else {
             Log::error('delete role', $context);
+
+            $type = 'error';
+            $message = __('can\'t delete role');
         }
 
-        return redirect()->back();
+        return redirect()->route('superuser.role.index')->with($type, $message);
     }
 }
