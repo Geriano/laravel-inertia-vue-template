@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-white border rounded shadow-xl p-4">
+  <div class="bg-white border rounded-md shadow-xl p-4">
     <div class="flex items-center justify-end mb-2">
-      <input v-model="search" type="text" name="search" class="bg-slate-50 text-xs border border-slate-200 rounded w-full sm:w-1/3 placeholder:capitalize" :placeholder="__('search something')">
+      <input v-model="search" type="text" name="search" class="bg-white text-xs border border-slate-200 rounded w-full sm:w-1/3 placeholder:capitalize" :placeholder="__('search something')">
     </div>
 
     <div class="overflow-auto border border-slate-200 rounded">
@@ -15,8 +15,8 @@
           </tr>
         </thead>
 
-        <tbody class="bg-slate-50">
-          <tr v-for="(role, i) in roles.filter(role => search.trim() ? (role.name.includes(search.trim()) || role.permissions.find(permission => permission.name.includes(search.trim()))) : true)" :key="i" class="bg-white border-slate-100 hover:border-slate-200 hover:bg-slate-100">
+        <tbody class="bg-white">
+          <tr v-for="(role, i) in roles.filter(role => search.trim() ? (role.name.includes(search.trim()) || role.permissions.find(permission => permission.name.includes(search.trim()))) : true)" :key="i" class="hover:bg-slate-100">
             <td class="border border-slate-200 px-3 py-1 text-center">{{ i + 1 }}</td>
             <td class="border border-slate-200 px-3 py-1 uppercase">{{ __(role.name) }}</td>
             <td class="border border-slate-200 px-3 py-1">
