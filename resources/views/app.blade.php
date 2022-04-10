@@ -11,6 +11,7 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendors/fontawesome/css/all.min.css') }}">
 
         <!-- Scripts -->
         @routes

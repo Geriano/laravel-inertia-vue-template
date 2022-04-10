@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full h-full space-y-2 bg-slate-100 border rounded-md shadow-md p-2">
+  <div class="flex flex-col w-full h-full space-y-2 bg-white border rounded-md shadow-md p-2">
     <DataTable route="api.v1.superuser.user.paginate" :softDeletes="true">
       <template v-slot:head="{sort, config}">
         <tr class="border-b border-slate-300">
@@ -16,7 +16,7 @@
       </template>
 
       <template v-slot:foot>
-        <tr class="border-t border-slate-300 hover:bg-slate-100">
+        <tr class="border-t border-slate-300">
           <DTh class="sticky left-0 text-sm" :sortable="false">no</DTh>
           <DTh class="text-sm" :sortable="false">profile</DTh>
           <DTh class="text-sm" :sortable="false">name</DTh>
@@ -30,7 +30,7 @@
       </template>
 
       <template v-slot:body="props">
-        <tr class="hover:bg-slate-200">
+        <tr class="hover:bg-slate-100">
           <td class="sticky top-0 left-0 border border-slate-200 text-center">{{ props.i + 1 }}</td>
           <td class="border border-slate-200 p-2">
             <img :src="props.item.profile_photo_url" :alt="props.item.username" class="w-12 h-12 border border-slate-200 rounded-full mx-auto">

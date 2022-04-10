@@ -6,8 +6,8 @@
       </span>
 
       <div v-if="sortable" class="flex flex-none flex-col">
-        <Icon src="caret-up" class="w-2 h-2" r="51" g="65" b="85" :a="sort === 'asc' ? 1 : 0.5" />
-        <Icon src="caret-down" class="w-2 h-2" r="51" g="65" b="85" :a="sort === 'desc' ? 1 : 0.5" />
+        <Icon src="caret-up" class="w-2 h-2 fa-xs" :class="sort === 'asc' ? 'text-slate-700' : 'text-slate-400'" />
+        <Icon src="caret-down" class="w-2 h-2 fa-xs" :class="sort === 'desc' ? 'text-slate-700' : 'text-slate-400'" />
       </div>
     </div>
   </th>

@@ -2,7 +2,7 @@
   <Link :href="href" :class="active && 'border-r-8 border-slate-700'" class="flex items-center w-full min-h-[3rem] space-x-1 transition-all">
     <div class="flex-none w-12 h-12 p-2">
       <button class="w-full h-full p-1">
-        <Icon :src="icon" r=156 g=165 b=173 class="w-full h-full" />
+        <Icon :src="icon" class="text-slate-400" />
       </button>
     </div>
 

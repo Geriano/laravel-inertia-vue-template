@@ -7,8 +7,8 @@
         <div v-if="showingSidebar" class="flex-none flex flex-col w-full sm:w-64 h-screen bg-slate-600">
           <div class="flex-none flex items-center w-full h-14 bg-slate-700 shadow-lg">
             <div class="flex-none w-14 h-14 p-3">
-              <button @click.prevent="showingSidebar = ! showingSidebar" class="sm:hidden w-full h-full border border-slate-800 rounded-md shadow-md p-2">
-                <Icon src="bars" r=156 g=165 b=173 />
+              <button @click.prevent="showingSidebar = ! showingSidebar" class="sm:hidden w-full h-full border border-slate-800 rounded-md shadow-md p-1">
+                <Icon src="bars" class="text-slate-700 w-full h-full" />
               </button>
             </div>
 
@@ -29,8 +29,8 @@
         <!-- Topbar -->
         <div class="flex-none flex items-center w-full h-14 bg-cyan-500 shadow-lg z-10">
           <div class="flex-none w-14 h-14 p-3">
-            <button @click.prevent="showingSidebar = ! showingSidebar" class="w-full h-full border border-slate-600 rounded-md shadow-md p-2">
-              <Icon src="bars" r=71 g=85 b=105 />
+            <button @click.prevent="showingSidebar = ! showingSidebar" class="w-full h-full border border-slate-600 rounded-md shadow-md p-1">
+              <Icon src="bars" class="text-slate-700 w-full h-full" />
             </button>
           </div>
 

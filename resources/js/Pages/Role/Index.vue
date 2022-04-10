@@ -33,7 +33,7 @@
         </div>
 
         <div class="flex items-center justify-end w-full bg-slate-200 p-2 text-sm">
-          <button class="bg-slate-700 border border-slate-800 text-slate-200 rounded-md shadow px-3 py-1 uppercase">{{ __('create') }}</button>
+          <button class="bg-slate-700 border border-slate-800 text-white rounded-md shadow px-3 py-1 uppercase">{{ __('create') }}</button>
         </div>
       </form>
     </div>

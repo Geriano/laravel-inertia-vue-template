@@ -5,8 +5,8 @@
         <slot name="text" />
       </div>
       
-      <div @click.prevent="open = ! open" class="relative flex-none border-l w-8 h-8 p-2">
-        <Icon src="caret-down" class="w-full h-full" :r="$props.r === null ? 51 : $props.r" :g="$props.g === null ? 65 : $props.g" :b="$props.b === null ? 85 : $props.b" />
+      <div @click.prevent="open = ! open" class="relative flex-none border-l w-8 h-8 p-1">
+        <Icon src="caret-down" class="text-white" />
 
         <transition name="fade">
           <slot v-if="open" name="actions" />

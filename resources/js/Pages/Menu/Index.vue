@@ -5,7 +5,7 @@
         <h3 class="text-xl font-semibold first-letter:capitalize lowercase">{{ __('create new menu') }}</h3>
       </div>
 
-      <form @submit.prevent="submit" class="w-full bg-slate-100 border border-slate-200 rounded-md shadow-xl">
+      <form @submit.prevent="submit" class="w-full bg-white border border-slate-200 rounded-md shadow-xl">
         <div class="flex flex-col space-y-2 p-4">
           <label for="name" class="first-letter:capitalize lowercase text-sm">{{ __('name') }}</label>
 

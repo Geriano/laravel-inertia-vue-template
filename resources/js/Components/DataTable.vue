@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-slate-100 p-0 rounded-md">
+  <div class="bg-transparent p-0 rounded-md">
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 sm:items-center justify-between mb-2">
       <div class="flex w-full sm:w-auto items-center space-x-2 justify-between sm:justify-start">
         <span class="lowercase first-letter:capitalize">{{ __('per page') }}</span>
@@ -22,7 +22,7 @@
     </div>
 
     <transition name="fade">
-      <div v-if="loading" class="flex items-center justify-center bg-slate-100 p-4 rounded-md h-[25rem]">
+      <div v-if="loading" class="flex items-center justify-center bg-transparent p-4 rounded-md h-[25rem]">
         <span>Loading...</span>
       </div>
 

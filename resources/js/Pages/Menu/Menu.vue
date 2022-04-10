@@ -12,24 +12,24 @@
     <div :draggable="false" class="flex-wrap w-full">{{ menu.position }}  - {{ __(menu.name) }}</div>
 
     <div :draggable="false" class="flex-none flex items-center space-x-1">
-      <Link v-if="menu.parent_id" :href="route('superuser.menu.remove-parent', menu.id)" :draggable="false" method="patch" as="button" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
-        <Icon src="caret-left" r="51" g="65" b="85" class="w-full h-full" />
+      <Link v-if="menu.parent_id" :href="route('superuser.menu.remove-parent', menu.id)" :draggable="false" method="patch" as="button" class="border border-slate-300 rounded shadow w-6 h-6 text-center">
+        <Icon src="caret-left" class="text-slate-700 fa-xs w-full h-full" />
       </Link>
 
-      <Link v-if="menu.position > 1" :href="route('superuser.menu.set-parent', menu.id)" :draggable="false" method="patch" as="button" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
-        <Icon src="caret-right" r="51" g="65" b="85" class="w-full h-full" />
+      <Link v-if="menu.position > 1" :href="route('superuser.menu.set-parent', menu.id)" :draggable="false" method="patch" as="button" class="border border-slate-300 rounded shadow w-6 h-6 text-center">
+        <Icon src="caret-right" class="text-slate-700 fa-xs w-full h-full" />
       </Link>
 
-      <button v-if="minimize" @click.prevent="$emit('toggle')" :draggable="false" class="border border-slate-300 rounded shadow p-1 w-6 h-6">
-        <Icon :src="open ? 'minus' : 'plus'" r="51" g="65" b="85" class="w-full h-full" />
+      <button v-if="minimize" @click.prevent="$emit('toggle')" :draggable="false" class="border border-slate-300 rounded shadow w-6 h-6 text-center">
+        <Icon :src="open ? 'minus' : 'plus'" class="text-slate-700 fa-xs w-full h-full" />
       </button>
 
-      <Link :href="route('superuser.menu.edit', menu.id)" :draggable="false" class="bg-blue-600 text-slate-200 border border-blue-700 rounded shadow p-1 w-6 h-6">
-        <Icon src="pen" class="w-full h-full" />
+      <Link :href="route('superuser.menu.edit', menu.id)" :draggable="false" class="bg-blue-600 text-slate-200 border border-blue-700 rounded shadow w-6 h-6 text-center">
+        <Icon src="pen" class="text-white fa-xs w-full h-full" />
       </Link>
 
-      <button v-if="menu.deleteable" @click.prevent="destroy(menu)" class="bg-red-600 text-slate-200 border border-red-700 rounded shadow p-1 w-6 h-6">
-        <Icon src="trash" class="w-full h-full" />
+      <button v-if="menu.deleteable" @click.prevent="destroy(menu)" class="bg-red-600 text-slate-200 border border-red-700 rounded shadow w-6 h-6 text-center">
+        <Icon src="trash" class="text-white fa-xs w-full h-full" />
       </button>
     </div>
   </button>

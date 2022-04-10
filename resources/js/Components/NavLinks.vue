@@ -3,7 +3,7 @@
     <button @click.prevent="showingDropdown = ! showingDropdown" :class="showingDropdown && 'border-r-8 border-slate-700'" class="flex-none flex items-center w-full min-h-[3rem] space-x-1 transition-all">
       <div class="flex-none w-12 h-12 p-2">
         <button class="w-full h-full p-1">
-          <Icon :src="icon" r=156 g=165 b=173 class="w-full h-full" />
+          <Icon :src="icon" class="text-slate-400" />
         </button>
       </div>
 
@@ -12,7 +12,7 @@
       </span>
 
       <div class="flex-none w-10 h-10 p-2">
-        <Icon :src="showingDropdown ? 'caret-down' : 'caret-left'" r=156 g=165 b=173 class="w-full h-full" />
+        <Icon :src="showingDropdown ? 'caret-down' : 'caret-left'" class="text-slate-400 w-full h-full" />
       </div>
     </button>
 
