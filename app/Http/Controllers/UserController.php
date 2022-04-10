@@ -45,7 +45,7 @@ class UserController extends Controller
         ]);
         
         $builder = User::withTrashed((bool) $request->input('withTrashed', 0))
-                        ->orderBy($request->input('sort.key'), $request->input('sort.order', 'asc'))
+                        ->orderBy($request->input('sort.key', 'name'), $request->input('sort.order', 'asc'))
                         ->whereNotIn('id', [1]);
 
         if ($search = $request->input('search')) {
