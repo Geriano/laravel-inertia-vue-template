@@ -1,6 +1,6 @@
 <template>
   <div class="relative flex flex-col w-full h-auto" style="z-index: 2;">
-    <button @click.prevent="showingDropdown = ! showingDropdown" :class="showingDropdown && 'border-r-8 border-slate-700'" class="flex-none flex items-center w-full min-h-[3rem] space-x-1 transition-all">
+    <button @click.prevent="showingDropdown = ! showingDropdown" :class="`${showingDropdown && 'border-r-8 border-slate-700 bg-slate-700'} pl-${$props.pl}`" class="flex-none flex items-center w-full min-h-[3rem] space-x-1 transition-all">
       <div class="flex-none w-12 h-12 p-2">
         <button class="w-full h-full p-1">
           <Icon :src="icon" class="text-slate-400" />
@@ -17,7 +17,7 @@
     </button>
 
     <transition-group name="fade">
-      <div v-if="showingDropdown" class="flex flex-col w-full h-auto pl-4">
+      <div v-if="showingDropdown" class="flex flex-col w-full h-auto">
         <slot />
       </div>
     </transition-group>
@@ -66,6 +66,9 @@
       child: {
         type: Boolean,
         default: false,
+      },
+      pl: {
+        type: Number,
       },
     },
   })
