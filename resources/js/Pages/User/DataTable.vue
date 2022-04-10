@@ -8,7 +8,7 @@
           <DTh class="px-3 py-1" :sort="config.sort.key === 'name' && config.sort.order" @click.prevent="sort('name')">name</DTh>
           <DTh class="px-3 py-1" :sort="config.sort.key === 'username' && config.sort.order" @click.prevent="sort('username')">username</DTh>
           <DTh class="px-3 py-1" :sort="config.sort.key === 'email' && config.sort.order" @click.prevent="sort('email')">email</DTh>
-          <DTh class="px-3 py-1" :sort="config.sort.key === 'verified_at' && config.sort.order" @click.prevent="sort('verified_at')">verified at</DTh>
+          <DTh class="px-3 py-1" :sort="config.sort.key === 'email_verified_at' && config.sort.order" @click.prevent="sort('email_verified_at')">verified at</DTh>
           <DTh class="px-3 py-1" :sort="config.sort.key === 'created_at' && config.sort.order" @click.prevent="sort('created_at')">created at</DTh>
           <DTh class="px-3 py-1" :sort="config.sort.key === 'deleted_at' && config.sort.order" @click.prevent="sort('deleted_at')">deleted at</DTh>
           <DTh class="px-3 py-1" :sortable="false">action</DTh>
@@ -38,7 +38,7 @@
           <td class="border border-slate-200 px-3 py-1 capitalize">{{ props.item.name }}</td>
           <td class="border border-slate-200 px-3 py-1 lowercase">{{ props.item.username }}</td>
           <td class="border border-slate-200 px-3 py-1 uppercase">{{ props.item.email }}</td>
-          <td class="border border-slate-200 px-3 py-1">{{ props.item.verified_at && new Date(props.item.verified_at).toLocaleString('id') }}</td>
+          <td class="border border-slate-200 px-3 py-1">{{ props.item.email_verified_at && new Date(props.item.email_verified_at).toLocaleString('id') }}</td>
           <td class="border border-slate-200 px-3 py-1">{{ props.item.created_at && new Date(props.item.created_at).toLocaleString('id') }}</td>
           <td class="border border-slate-200 px-3 py-1">{{ props.item.deleted_at && new Date(props.item.deleted_at).toLocaleString('id') }}</td>
           <td class="border border-slate-200 px-3 py-1">
