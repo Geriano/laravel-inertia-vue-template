@@ -6,14 +6,14 @@ Built using the php programming language, using laravel, inertiajs, and vuejs.
 You can lookup demo in [here](http://laravel-inertia-vue.herokuapp.com) with username `su` and password `password`
 
 # Dependencies
-- Laravel ^9.0
-- Laravel Jetstream ^2.6
-- Inertiajs
-- Vue ^3.0
-- Tailwindcss ^3.0
-- Sweetalert2 ^11.4
-- Vueform Multiselect ^2.3
-- Fontawesome Free Version
+- [Laravel](https://laravel.com) ^9.0
+- [Laravel Jetstream](https://jetstream.laravel.com) ^2.6
+- [Inertiajs](https://inertiajs.com)
+- [Vue](https://vuejs.org) ^3.0
+- [Tailwindcss](https://tailwindcss.com) ^3.0
+- [Sweetalert2](https://sweetalert2.github.io) ^11.4
+- [Vueform Multiselect](https://vueform.com) ^2.3
+- [Fontawesome Free Version](https://fontawesome.com)
 
 # Features
 ## User crud
