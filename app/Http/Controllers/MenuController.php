@@ -18,7 +18,7 @@ class MenuController extends Controller
     public function __construct()
     {
         $icons = array_map(fn ($file) => (new SplFileInfo($file))->getFilename(), glob(
-            sprintf('%s/*.svg', public_path('icons'))
+            sprintf('%s/*.svg', public_path('vendors/fontawesome/svgs/**'))
         ));
 
         $icons = array_map(fn ($file) => substr(
