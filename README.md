@@ -3,7 +3,7 @@ This project is an initial template for building applications.
 Built using the php programming language, using laravel, inertiajs, and vuejs.
 
 # Demo
-You can lookup demo in [here](http://laravel-inertia-vue.herokuapp.com)
+You can lookup demo in [here](http://laravel-inertia-vue.herokuapp.com) with username `su` and password `password`
 
 # Dependencies
 - Laravel ^9.0
