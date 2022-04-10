@@ -44,20 +44,24 @@ class UserController extends Controller
             'sort.order' => 'nullable|in:asc,desc',
         ]);
         
-        return User::withTrashed((bool) $request->input('withTrashed', 0))
-                    ->orderBy($request->input('sort.key'), $request->input('sort.order', 'asc'))
-                    ->whereNotIn('id', [1])
-                    ->where(function ($query) use ($request) {
-                        $search = '%' . $request->input('search') . '%';
+        $builder = User::withTrashed((bool) $request->input('withTrashed', 0))
+                        ->orderBy($request->input('sort.key'), $request->input('sort.order', 'asc'))
+                        ->whereNotIn('id', [1]);
 
-                        $query->where('name', 'like', $search)
-                                ->orWhere('username', 'like', $search)
-                                ->orWhere('email', 'like', $search)
-                                ->orWhere('email_verified_at', 'like', $search)
-                                ->orWhere('created_at', 'like', $search)
-                                ->orWhere('deleted_at', 'like', $search);
-                    })
-                    ->paginate($request->input('perPage', 15));
+        if ($search = $request->input('search')) {
+            $builder = $builder->where(function ($query) use ($search) {
+                $search = '%' . $search . '%';
+
+                $query->where('name', 'like', $search)
+                        ->orWhere('username', 'like', $search)
+                        ->orWhere('email', 'like', $search)
+                        ->orWhere('email_verified_at', 'like', $search)
+                        ->orWhere('created_at', 'like', $search)
+                        ->orWhere('deleted_at', 'like', $search);
+            });
+        }
+
+        return $builder->paginate($request->input('perPage', 10));
     }
 
     /**
