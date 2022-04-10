@@ -17,6 +17,12 @@
               return true
             }
             
+            for (let name of menu.routes) {
+              if (route().current(name)) {
+                return true
+              }
+            }
+            
             for (let child of menu.childs) {
               if (active(child)) {
                 return true
