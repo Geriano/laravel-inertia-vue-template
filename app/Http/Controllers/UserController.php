@@ -114,7 +114,7 @@ class UserController extends Controller
             $message = __("can't create user");
         }
 
-        return redirect()->route('user.index')->with($type, $message);
+        return redirect()->route('superuser.user.index')->with($type, $message);
     }
 
     /**
@@ -157,7 +157,7 @@ class UserController extends Controller
             $message = __("can't update user");
         }
 
-        return redirect()->route('user.index')->with($type, $message);
+        return redirect()->route('superuser.user.index')->with($type, $message);
     }
 
     /**
@@ -188,7 +188,7 @@ class UserController extends Controller
             $message = __("can't delete user");
         }
 
-        return redirect()->route('user.index')->with($type, $message);
+        return redirect()->route('superuser.user.index')->with($type, $message);
     }
 
     /**
@@ -217,7 +217,7 @@ class UserController extends Controller
             $message = __("can't update password");
         }
 
-        return redirect()->route('user.index')->with($type, $message);
+        return redirect()->route('superuser.user.index')->with($type, $message);
     }
 
     /**
@@ -244,7 +244,7 @@ class UserController extends Controller
             $message = __("can't restore user");
         }
 
-        return redirect()->route('user.index')->with($type, $message);
+        return redirect()->route('superuser.user.index')->with($type, $message);
     }
 
     /**
