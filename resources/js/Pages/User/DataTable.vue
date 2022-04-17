@@ -1,7 +1,7 @@
 <template>
   <Card class="bg-white">
     <template #body>
-      <DataTable route="api.v1.superuser.user.paginate" :softDeletes="true">
+      <DataTable route="api.v1.superuser.user.paginate" :softDeletes="true" :interval="5000">
         <template v-slot:head="props">
           <tr class="border-b border-slate-300">
             <DTh class="sticky left-0 px-3 py-1" :sortable="false">no</DTh>

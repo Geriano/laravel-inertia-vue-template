@@ -33,7 +33,9 @@
           </tfoot>
 
           <tbody>
-            <slot name="body" v-for="(item, i) in data.data" :key="i" :item="item" :i="i" :refresh="refresh" />
+            <transition-group name="fade">
+              <slot name="body" v-for="(item, i) in data.data" :key="i" :item="item" :i="i" :refresh="refresh" />
+            </transition-group>
           </tbody>
         </table>
       </div>
