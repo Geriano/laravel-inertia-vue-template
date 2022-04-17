@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-transparent p-0 rounded-md">
+  <div class="bg-inherit p-0 rounded-md">
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 sm:items-center justify-between mb-2">
       <div class="flex w-full sm:w-auto items-center space-x-2 justify-between sm:justify-start">
         <span class="lowercase first-letter:capitalize">{{ __('per page') }}</span>
 
-        <select v-model="config.perPage" @change.prevent="refresh" class="bg-transparent border border-slate-300 rounded-md p-1">
+        <select v-model="config.perPage" @change.prevent="refresh" class="bg-inherit border border-slate-300 rounded-md p-1">
           <option value="10">10</option>
           <option value="15">15</option>
           <option value="25">25</option>
@@ -18,15 +18,11 @@
         </button>
       </div>
 
-      <input type="search" v-model="config.search" @input.prevent="refresh" class="bg-transparent sm:w-2/5 border border-slate-300 rounded-md placeholder:capitalize text-xs" :placeholder="__('search something')">
+      <input type="search" v-model="config.search" @input.prevent="refresh" class="bg-inherit sm:w-2/5 border border-slate-300 rounded-md placeholder:capitalize text-xs" :placeholder="__('search something')">
     </div>
 
     <transition name="fade">
-      <div v-if="loading" class="flex items-center justify-center bg-transparent p-4 rounded-md h-[25rem]">
-        <span>Loading...</span>
-      </div>
-
-      <div v-else class="overflow-auto border border-slate-300 rounded-md mb-2 max-h-[25rem]">
+      <div class="overflow-auto border border-slate-300 rounded-md mb-2 max-h-[25rem]">
         <table class="w-full border-collapse">
           <thead class="bg-slate-200 sticky top-0 z-10">
             <slot name="head" :config="config" :sort="sort" />
@@ -77,6 +73,11 @@
         type: Boolean,
         default: false,
       },
+
+      interval: {
+        type: Number,
+        default: 0,
+      },
     },
 
     data() {
@@ -95,6 +96,7 @@
         loading: true,
 
         data: {},
+        intervalHandlerId: null,
       }
     },
 
@@ -136,7 +138,17 @@
 
     mounted() {
       this.config.url = route(this.route)
-      return this.refresh()
+      this.refresh()
+
+      if (this.interval) {
+        this.intervalHandlerId = setInterval(() => this.refresh(), this.interval)
+      }
+    },
+
+    unmounted() {
+      if (this.intervalHandlerId) {
+        clearInterval(this.intervalHandlerId)
+      }
     },
   })
 </script>
