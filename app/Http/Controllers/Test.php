@@ -6,6 +6,6 @@ class Test extends Controller
 {
     public function index()
     {
-      dd(flash());
+      // 
     }
 }
