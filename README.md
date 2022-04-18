@@ -2,6 +2,18 @@
 This project is an initial template for building applications.
 Built using the php programming language, using laravel, inertiajs, and vuejs.
 
+<p align=center>
+<img src="https://img.shields.io/github/license/Geriano/laravel-inertia-vue-template.svg" />
+<img src="https://img.shields.io/github/downloads/Geriano/laravel-inertia-vue-template/total.svg" />
+<img src="https://img.shields.io/github/forks/Geriano/laravel-inertia-vue-template.svg" />
+<img src="https://img.shields.io/github/stars/Geriano/laravel-inertia-vue-template.svg" />
+<img src="https://img.shields.io/github/watchers/Geriano/laravel-inertia-vue-template.svg" />
+<img src="https://img.shields.io/github/issues/Geriano/laravel-inertia-vue-template.svg" />
+<img src="https://img.shields.io/github/issues-closed/Geriano/laravel-inertia-vue-template.svg" />
+<img src="https://img.shields.io/github/issues-pr/Geriano/laravel-inertia-vue-template.svg" />
+<img src="https://img.shields.io/github/issues-pr-closed/Geriano/laravel-inertia-vue-template.svg" />
+</p>
+
 # Demo
 You can lookup demo in [here](http://laravel-inertia-vue.herokuapp.com) with username `su` and password `password`
 
