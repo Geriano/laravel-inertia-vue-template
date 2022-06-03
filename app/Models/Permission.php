@@ -13,4 +13,18 @@ class Permission extends Model
     'name',
     'guard_name',
   ];
+
+  /**
+   * @inheritdoc
+   */
+  public static function boot()
+  {
+    parent::boot();
+
+    static::created(function ($permission) {
+      Role::where('name', 'superuser')
+          ->first()
+          ->givePermissionTo($permission);
+    });
+  }
 }

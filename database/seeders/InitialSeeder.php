@@ -129,14 +129,5 @@ class InitialSeeder extends Seeder
     $supervisor->assignRole($roles['supervisor']);
     $assisstantSupervisor->assignRole($roles['assisstant supervisor']);
     $operator->assignRole($roles['operator']);
-
-    foreach ($permissions as $permission) {
-      $roles['superuser']->givePermissionTo([
-        $permission['create'],
-        $permission['read'],
-        $permission['update'],
-        $permission['delete'],
-      ]);
-    }
   }
 }

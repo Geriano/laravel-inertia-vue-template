@@ -38,8 +38,6 @@ class PermissionController extends Controller
         $post = array_map('mb_strtolower', $post);
 
         if ($permission = Permission::create($post)) {
-            Role::where('name', 'superuser')->first()->givePermissionTo($permission);
-
             Log::info('create permission', $permission->toArray());
 
             $type = 'success';
