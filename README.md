@@ -2,6 +2,8 @@
 This project is an initial template for building applications.
 Built using the php programming language, using laravel, inertiajs, and vuejs.
 
+Moved to [here](https://github.com/Geriano/laravel-inertia-vite-template)
+
 <p align=center>
 <img src="https://img.shields.io/github/license/Geriano/laravel-inertia-vue-template.svg" />
 <img src="https://img.shields.io/github/downloads/Geriano/laravel-inertia-vue-template/total.svg" />
@@ -56,6 +58,7 @@ php artisan migrate:fresh --seed
 ```
 - After all is complete now you can run serve command to look your template
 ```shell
+php artisan key:generate
 php artisan serve
 ```
 - Now your template is ready to use
